@@ -136,9 +136,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       await clearAppMode();
       await clearCache();
       
-      // Allow screenshots again after logout
+      // Allow screenshots again after logout - TEMPORARILY DISABLED FOR DEBUG
       try {
-        await ScreenCapture.allowScreenCaptureAsync();
+        // await ScreenCapture.allowScreenCaptureAsync();
+        console.log('🐛 Debug: Screenshot blocking disabled for development');
       } catch (error) {
         console.error('Error allowing screen capture:', error);
       }

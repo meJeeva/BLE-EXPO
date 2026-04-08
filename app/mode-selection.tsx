@@ -1,23 +1,32 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { saveAppMode } from '../src/utils/mode';
-import { useAuthStore } from '../src/store/authStore';
-import { Colors, Typography, Spacing, BorderRadius } from '../src/constants/theme';
+import { Colors } from '@/src/constants/theme';
+import { USAGE_TYPES, UsageType } from '@/src/constants/usageTypes';
+import { useRouter } from 'expo-router';
+import { useAuthStore } from '@/src/store/authStore';
+import { saveAppMode } from '@/src/utils/mode';
+import { FlatList } from 'react-native-gesture-handler';
 
 export default function ModeSelection() {
   const router = useRouter();
   const { setAppMode } = useAuthStore();
   const [loading, setLoading] = useState(false);
+  const [selected, setSelected] = useState<'HOME' | 'HOSPITAL' | null>(null);
 
   const handleSelectMode = async (mode: 'HOME' | 'HOSPITAL') => {
     setLoading(true);
     try {
       await saveAppMode(mode);
       setAppMode(mode);
-      
+
       if (mode === 'HOME') {
         router.replace('/login');
       } else {
@@ -30,67 +39,93 @@ export default function ModeSelection() {
     }
   };
 
+  const onHandleContinue = () => {
+    if (selected) handleSelectMode(selected);
+  }
+
+  const RenderUsageType = ({ item }: { item: UsageType }) => {
+    const isSelected = selected === item.id;
+
+    return (
+      <TouchableOpacity
+        key={item.id}
+        style={[
+          styles.card,
+          isSelected && styles.selectedCard,
+        ]}
+        onPress={() => setSelected(item.id)}
+      >
+        <View
+          style={[
+            styles.iconBox,
+            { backgroundColor: item.bgColor },
+          ]}
+        >
+          <Ionicons
+            name={item.icon as any}
+            size={24}
+            color={item.iconColor}
+          />
+        </View>
+
+        <View style={styles.textContainer}>
+          <Text style={styles.cardTitle}>{item.title}</Text>
+          <Text style={styles.cardSubtitle}>
+            {item.subtitle}
+          </Text>
+        </View>
+
+        {
+          isSelected && (
+            <Ionicons
+              name={'checkmark-circle'
+              }
+              size={22}
+              color={Colors.Primary
+              }
+            />
+          )
+        }
+      </TouchableOpacity>
+    );
+  }
+
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        {/* Header */}
-        <View style={styles.header}>
-          <View style={styles.iconContainer}>
-            <Ionicons name="fitness" size={64} color={Colors.Primary} />
-          </View>
-          <Text style={styles.title}>Welcome to VitalZ</Text>
-          <Text style={styles.subtitle}>Choose your mode to get started</Text>
+        <Text style={styles.title}>Choose Usage Type</Text>
+        <Text style={styles.subtitle}>How will you use VitalZ?</Text>
+
+        <View style={styles.iconContainer}>
+          <Image
+            source={require('@/assets/images/logo.png')}
+            style={styles.appIcon}
+            resizeMode="contain"
+          />
         </View>
 
-        {/* Mode Options */}
-        <View style={styles.optionsContainer}>
-          <TouchableOpacity
-            style={styles.modeCard}
-            onPress={() => handleSelectMode('HOME')}
-            disabled={loading}
-            activeOpacity={0.7}
-          >
-            <View style={[styles.modeIcon, { backgroundColor: Colors.Primary + '20' }]}>
-              <Ionicons name="home" size={48} color={Colors.Primary} />
-            </View>
-            <Text style={styles.modeTitle}>Home Mode</Text>
-            <Text style={styles.modeDescription}>
-              Monitor vitals for yourself and your family members at home
-            </Text>
-            <View style={styles.modeFeatures}>
-              <View style={styles.featureItem}>
-                <Ionicons name="checkmark-circle" size={16} color={Colors.Secondary} />
-                <Text style={styles.featureText}>Family management</Text>
-              </View>
-              <View style={styles.featureItem}>
-                <Ionicons name="checkmark-circle" size={16} color={Colors.Secondary} />
-                <Text style={styles.featureText}>Device registration</Text>
-              </View>
-              <View style={styles.featureItem}>
-                <Ionicons name="checkmark-circle" size={16} color={Colors.Secondary} />
-                <Text style={styles.featureText}>Vitals tracking</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.modeCard}
-            onPress={() => handleSelectMode('HOSPITAL')}
-            disabled={loading}
-            activeOpacity={0.7}
-          >
-            <View style={[styles.modeIcon, { backgroundColor: Colors.Secondary + '20' }]}>
-              <Ionicons name="business" size={48} color={Colors.Secondary} />
-            </View>
-            <Text style={styles.modeTitle}>Hospital Mode</Text>
-            <Text style={styles.modeDescription}>
-              Professional mode for healthcare facilities and clinical settings
-            </Text>
-            <View style={styles.comingSoonBadge}>
-              <Text style={styles.comingSoonText}>Coming Soon</Text>
-            </View>
-          </TouchableOpacity>
+        <View style={styles.cardContainer}>
+          <FlatList
+            data={USAGE_TYPES}
+            renderItem={RenderUsageType}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.cardContainer}
+            showsVerticalScrollIndicator={false}
+          />
         </View>
+      </View>
+
+      <View style={styles.footer}>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            !selected && { opacity: 0.5 },
+          ]}
+          disabled={!selected || loading}
+          onPress={onHandleContinue}
+        >
+          <Text style={styles.buttonText}>Continue</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -100,89 +135,78 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.Background,
+    justifyContent: 'space-between',
   },
   content: {
-    flex: 1,
-    padding: Spacing.lg,
-    justifyContent: 'center',
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: Spacing.xxl,
-  },
-  iconContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: Colors.PrimaryLight,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: Spacing.lg,
+    padding: 20,
   },
   title: {
-    ...Typography.H1,
-    fontSize: 28,
+    fontSize: 20,
+    fontWeight: '700',
     color: Colors.TextPrimary,
-    marginBottom: Spacing.sm,
+    marginBottom: 6,
   },
   subtitle: {
-    ...Typography.Body,
+    fontSize: 14,
     color: Colors.TextSecondary,
-    textAlign: 'center',
+    marginBottom: 20,
   },
-  optionsContainer: {
-    gap: Spacing.lg,
-  },
-  modeCard: {
-    backgroundColor: Colors.Surface,
-    borderRadius: BorderRadius.lg,
-    padding: Spacing.xl,
-    borderWidth: 2,
-    borderColor: Colors.Border,
+  iconContainer: {
     alignItems: 'center',
+    marginVertical: 30,
   },
-  modeIcon: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: Spacing.md,
+  appIcon: {
+    width: 120,
+    height: 120,
   },
-  modeTitle: {
-    ...Typography.H1,
-    color: Colors.TextPrimary,
-    marginBottom: Spacing.sm,
+  cardContainer: {
+    gap: 16,
   },
-  modeDescription: {
-    ...Typography.BodySmall,
-    color: Colors.TextSecondary,
-    textAlign: 'center',
-    marginBottom: Spacing.md,
-  },
-  modeFeatures: {
-    width: '100%',
-    gap: Spacing.sm,
-  },
-  featureItem: {
+  card: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.sm,
+    backgroundColor: Colors.Surface,
+    padding: 16,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: Colors.Border,
   },
-  featureText: {
-    ...Typography.BodySmall,
+  selectedCard: {
+    borderColor: Colors.primaryBackground,
+  },
+  iconBox: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 14,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  cardTitle: {
+    fontSize: 15,
+    fontWeight: '600',
     color: Colors.TextPrimary,
   },
-  comingSoonBadge: {
-    backgroundColor: Colors.Warning + '20',
-    borderRadius: BorderRadius.md,
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.sm,
-    marginTop: Spacing.sm,
+  cardSubtitle: {
+    fontSize: 13,
+    color: Colors.TextSecondary,
+    marginTop: 4,
   },
-  comingSoonText: {
-    ...Typography.BodySmall,
-    color: Colors.Warning,
+  footer: {
+    padding: 20,
+  },
+  button: {
+    backgroundColor: Colors.primaryBackground,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: Colors.TextWhite,
     fontWeight: '600',
+    fontSize: 16,
   },
 });

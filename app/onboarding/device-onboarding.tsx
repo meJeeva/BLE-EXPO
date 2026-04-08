@@ -10,7 +10,7 @@ import {
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { api } from '../../src/services/api';
 import { useAuthStore } from '../../src/store/authStore';
 import { Input } from '../../src/components/Input';
@@ -19,9 +19,9 @@ import { Colors, Typography, Spacing, BorderRadius } from '../../src/constants/t
 
 export default function DeviceOnboarding() {
   const router = useRouter();
-  const { fetchBootstrap } = useAuthStore();
+  const { logout, fetchBootstrap } = useAuthStore();
   const [permission, requestPermission] = useCameraPermissions();
-  const [showScanner, setShowScanner] = useState(false);
+  const [showScanner, setShowScanner] = useState(true);
   const [deviceId, setDeviceId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -49,6 +49,43 @@ export default function DeviceOnboarding() {
     setShowScanner(true);
   };
 
+  const handleClaimDevice = async () => {
+    if (!deviceId.trim()) {
+      setError('Please enter or scan a device ID');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    try {
+      await api.claimDevice(deviceId.trim());
+
+      // Refresh bootstrap data
+      await fetchBootstrap();
+
+      // Navigate to dashboard
+      router.replace('/(tabs)/dashboard');
+    } catch (error: any) {
+      setError(error.response?.data?.message || 'Failed to claim device');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = () => {
+    Alert.alert('Logout', 'Are you sure you want to logout?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Logout',
+        style: 'destructive',
+        onPress: async () => {
+          await logout();
+          router.replace('/login');
+        },
+      },
+    ]);
+  };
+
   const handleRegisterDevice = async () => {
     if (!deviceId.trim()) {
       setError('Please enter or scan a device ID');
@@ -57,16 +94,9 @@ export default function DeviceOnboarding() {
 
     setLoading(true);
     try {
-      // Step 1: Register device
       await api.registerDevice(deviceId.trim(), 'HOME');
-      
-      // Step 2: Claim device
       await api.claimDevice(deviceId.trim());
-
-      // Refresh bootstrap data
       await fetchBootstrap();
-
-      // Ask about warranty registration
       Alert.alert(
         'Device Added Successfully',
         'Would you like to register the warranty for this device?',
@@ -89,59 +119,50 @@ export default function DeviceOnboarding() {
     }
   };
 
-  if (showScanner) {
-    return (
-      <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
-        <View style={styles.scannerContainer}>
-          <CameraView
-            style={styles.camera}
-            facing="back"
-            onBarcodeScanned={handleBarCodeScanned}
-            barcodeScannerSettings={{
-              barcodeTypes: ['qr'],
-            }}
-          >
-            <View style={styles.scannerOverlay}>
-              <View style={styles.scannerFrame} />
-              <Text style={styles.scannerText}>Position QR code within frame</Text>
-            </View>
-          </CameraView>
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={() => setShowScanner(false)}
-          >
-            <Ionicons name="close" size={32} color={Colors.Surface} />
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
-          <Text style={styles.title}>Add Your Device</Text>
+          <Text style={styles.title}>Scan Device QR</Text>
           <Text style={styles.subtitle}>
-            Scan the QR code on your device or enter the ID manually
+            Scan the QR code on the back of your device
           </Text>
         </View>
 
-        <TouchableOpacity style={styles.scanCard} onPress={openScanner}>
-          <Ionicons name="qr-code-outline" size={64} color={Colors.Primary} />
-          <Text style={styles.scanCardTitle}>Scan QR Code</Text>
-          <Text style={styles.scanCardSubtitle}>Quick and easy setup</Text>
-        </TouchableOpacity>
+        {
+          showScanner && (
+            <View style={styles.scannerContainer}>
+              <CameraView
+                style={styles.camera}
+                facing="back"
+                onBarcodeScanned={handleBarCodeScanned}
+                barcodeScannerSettings={{
+                  barcodeTypes: ['qr'],
+                }}
+              >
+                <View style={styles.scannerOverlay}>
+                  <View style={styles.scannerFrame}>
+                    <MaterialIcons name="qr-code-scanner" size={80} color={Colors.TextSecondary} />
+                  </View>
+                  <Text style={styles.scannerText}>Position QR code within frame</Text>
+                </View>
+              </CameraView>
+            </View>
+          )
+        }
 
-        <View style={styles.divider}>
-          <View style={styles.dividerLine} />
-          <Text style={styles.dividerText}>OR</Text>
-          <View style={styles.dividerLine} />
-        </View>
+        {showScanner && <TouchableOpacity onPress={() => {
+          setShowScanner(false);
+        }}>
+          <Text style={[styles.manualEntryText, {
+            marginTop: Spacing.lg,
+          }]}><Text style={{ fontSize: 24, fontWeight: 'bold' }}>ⲧ  </Text> Enter device ID manually</Text>
+        </TouchableOpacity>}
 
-        <Input
+
+        {!showScanner && <Input
           label="Device ID"
-          placeholder="Enter device ID manually"
+          placeholder="VTZ-XXXX-XXXX"
           value={deviceId}
           onChangeText={(text) => {
             setDeviceId(text);
@@ -149,11 +170,26 @@ export default function DeviceOnboarding() {
           }}
           error={error}
           autoCapitalize="characters"
-        />
+        />}
+
+        {
+          !showScanner && (
+            <TouchableOpacity onPress={() => setShowScanner(true)} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', gap: 10 }}>
+              <Ionicons name="arrow-back" size={20} color={Colors.Primary} />
+              <Text style={styles.manualEntryText}>
+                Back to scanner
+              </Text>
+            </TouchableOpacity>
+          )
+        }
+
 
         <Button
           title="Add Device"
-          onPress={handleRegisterDevice}
+          // onPress={handleRegisterDevice}
+          onPress={() => {
+            router.replace({ pathname: '/onboarding/device-detect' as any, params: { deviceId: deviceId.trim() } })
+          }}
           loading={loading}
           disabled={loading || !deviceId.trim()}
           style={styles.button}
@@ -182,7 +218,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.sm,
   },
   subtitle: {
-    ...Typography.Body,
+    ...Typography.BodySmall,
     color: Colors.TextSecondary,
   },
   scanCard: {
@@ -224,10 +260,11 @@ const styles = StyleSheet.create({
   },
   // Scanner styles
   scannerContainer: {
-    flex: 1,
+    flex: 0.9,
   },
   camera: {
     flex: 1,
+    borderRadius: BorderRadius.lg,
   },
   scannerOverlay: {
     flex: 1,
@@ -241,11 +278,15 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: Colors.Surface,
     borderRadius: BorderRadius.lg,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   scannerText: {
-    ...Typography.Body,
+    ...Typography.BodySmall,
     color: Colors.Surface,
     marginTop: Spacing.lg,
+    position: 'absolute',
+    bottom: 10,
   },
   closeButton: {
     position: 'absolute',
@@ -254,5 +295,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
     borderRadius: 50,
     padding: Spacing.sm,
+  },
+  manualEntryText: {
+    color: Colors.Primary,
+    textAlign: 'center',
+    fontWeight: '600',
   },
 });

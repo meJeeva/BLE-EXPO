@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   RefreshControl,
+  Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -17,7 +18,7 @@ import { Colors, Typography, Spacing, BorderRadius } from '../../src/constants/t
 
 export default function Family() {
   const router = useRouter();
-  const { bootstrapData } = useAuthStore();
+  const { logout, bootstrapData } = useAuthStore();
   const { currentPatient, setCurrentPatient, fetchPatients, isLoadingPatients } = useAppStore();
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -29,6 +30,20 @@ export default function Family() {
     setRefreshing(true);
     await fetchPatients();
     setRefreshing(false);
+  };
+
+  const handleLogout = () => {
+    Alert.alert('Logout', 'Are you sure you want to logout?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Logout',
+        style: 'destructive',
+        onPress: async () => {
+          await logout();
+          router.replace('/login');
+        },
+      },
+    ]);
   };
 
   const patients = bootstrapData?.patients || [];
@@ -112,6 +127,13 @@ export default function Family() {
       >
         <Ionicons name="add" size={28} color={Colors.Surface} />
       </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.logoutButton}
+        onPress={handleLogout}
+      >
+        <Ionicons name="log-out-outline" size={24} color={Colors.Surface} />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -189,11 +211,27 @@ const styles = StyleSheet.create({
   addButton: {
     position: 'absolute',
     right: Spacing.lg,
-    bottom: Spacing.lg,
+    bottom: Spacing.lg + 60,
     width: 56,
     height: 56,
     borderRadius: 28,
     backgroundColor: Colors.Primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  logoutButton: {
+    position: 'absolute',
+    right: Spacing.lg,
+    bottom: Spacing.lg,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: Colors.Error,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',

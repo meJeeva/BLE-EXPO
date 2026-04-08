@@ -14,6 +14,13 @@ export const Colors = {
   Error: '#E53935',
   Warning: '#F59E0B',
   Info: '#2563EB',
+
+  shadowColor: '#000',
+  primaryBackground: '#4A90E2',
+  TextWhite: '#ffffff',
+
+  IconBlack: '#000000',
+  lightGrey: '#A0AEC0'
 };
 
 export const Typography = {

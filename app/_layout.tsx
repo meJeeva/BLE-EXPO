@@ -9,22 +9,21 @@ import { Colors } from '../src/constants/theme';
 export default function RootLayout() {
   const { initialize } = useAuthStore();
 
-  console.log('initialize',initialize)
+  console.log('initialize', initialize)
 
   useEffect(() => {
     initialize();
-    
-    // Global screenshot blocking
+
     const enableScreenshotBlocking = async () => {
       try {
-        await ScreenCapture.preventScreenCaptureAsync();
+        // await ScreenCapture.preventScreenCaptureAsync();
         console.log('Screenshot blocking enabled globally');
       } catch (error) {
         console.error('Error enabling screenshot blocking:', error);
       }
     };
-    
-    enableScreenshotBlocking();
+
+    // enableScreenshotBlocking();
   }, []);
 
   return (
@@ -46,11 +45,18 @@ export default function RootLayout() {
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="mode-selection" options={{ headerShown: false }} />
           <Stack.Screen name="login" options={{ headerShown: false }} />
-          <Stack.Screen name="otp" options={{ title: 'Verify OTP', headerBackVisible: true }} />
-          <Stack.Screen name="onboarding/household" options={{ title: 'Create Household', headerBackVisible: false }} />
-          <Stack.Screen name="onboarding/add-patient" options={{ title: 'Add Family Member'}} />
-          <Stack.Screen name="onboarding/device-onboarding" options={{ title: 'Add Device' }} />
-          <Stack.Screen name="onboarding/warranty" options={{ title: 'Warranty Registration' }} />
+          <Stack.Screen name="otp" options={{ headerShown: false }} />
+          <Stack.Screen name="createUser" options={{ headerShown: false }} />
+          <Stack.Screen name="onboarding/device-detect" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />
+          <Stack.Screen name="onboarding/enable-bluetooth" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />
+          <Stack.Screen name="onboarding/searching-device" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />
+          <Stack.Screen name="onboarding/device-found" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />
+          <Stack.Screen name="onboarding/household" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />
+          <Stack.Screen name="onboarding/connecting-device" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />
+          <Stack.Screen name="onboarding/connected-successfully" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />
+          <Stack.Screen name="onboarding/add-patient" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />
+          <Stack.Screen name="onboarding/device-onboarding" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />
+          <Stack.Screen name="onboarding/warranty" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="patients/add" options={{ title: 'Add Family Member' }} />
           <Stack.Screen name="patients/edit" options={{ title: 'Edit Family Member' }} />

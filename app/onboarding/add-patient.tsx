@@ -16,65 +16,91 @@ import { api } from '../../src/services/api';
 import { useAuthStore } from '../../src/store/authStore';
 import { Input } from '../../src/components/Input';
 import { Button } from '../../src/components/Button';
-import { Colors, Typography, Spacing } from '../../src/constants/theme';
+import { Colors, Typography, Spacing, BorderRadius } from '../../src/constants/theme';
 import { validateName, validatePhone, validateAge, validateHeight, validateWeight } from '../../src/utils/helpers';
 import { Ionicons } from '@expo/vector-icons';
+import { TextInput } from 'react-native-gesture-handler';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function AddPatient() {
   const router = useRouter();
-  const { fetchBootstrap } = useAuthStore();
+  const { logout, fetchBootstrap } = useAuthStore();
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<any>({});
-  
+
   const [formData, setFormData] = useState({
     full_name: '',
-    relationship: 'self',
     gender: 'male',
-    age_years: '',
-    phone: '',
-    height_cm: '',
-    weight_kg: '',
-    notes: '',
+    relationship: 'Self',
   });
+
+  const [dob, setDob] = useState<Date | null>(null);
+  const [showDate, setShowDate] = useState(false);
+  const [showRelationshipDropdown, setShowRelationshipDropdown] = useState(false);
+  const [errors, setErrors] = useState<any>({});
 
   const updateField = (field: string, value: string) => {
     setFormData({ ...formData, [field]: value });
     setErrors({ ...errors, [field]: '' });
   };
 
-  const validate = () => {
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-GB');
+  };
+
+  const relationshipOptions = [
+    'Self',
+    'Spouse',
+    'Parent',
+    'Child',
+    'Sibling',
+    'Grandparent',
+    'Other'
+  ];
+
+  const validateForm = () => {
     const newErrors: any = {};
-    
-    if (!validateName(formData.full_name)) {
-      newErrors.full_name = 'Name must be 2-60 characters';
+
+    if (!formData.full_name.trim()) {
+      newErrors.full_name = 'Full name is required';
+    } else if (formData.full_name.trim().length < 2) {
+      newErrors.full_name = 'Name must be at least 2 characters';
+    } else if (formData.full_name.trim().length > 60) {
+      newErrors.full_name = 'Name must be less than 60 characters';
     }
-    
-    if (formData.age_years && !validateAge(parseInt(formData.age_years))) {
-      newErrors.age_years = 'Age must be 0-120 years';
+
+    if (!dob) {
+      newErrors.dob = 'Date of birth is required';
+    } else {
+      const today = new Date();
+      const age = today.getFullYear() - dob.getFullYear();
+      const monthDiff = today.getMonth() - dob.getMonth();
+      const dayDiff = today.getDate() - dob.getDate();
+      const actualAge = monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age;
+
+      if (actualAge < 0) {
+        newErrors.dob = 'Date of birth cannot be in the future';
+      } else if (actualAge > 120) {
+        newErrors.dob = 'Please enter a valid date of birth';
+      }
     }
-    
-    if (formData.phone && !validatePhone(formData.phone)) {
-      newErrors.phone = 'Phone must be 10-15 digits';
+
+    if (!formData.gender) {
+      newErrors.gender = 'Gender is required';
     }
-    
-    if (formData.height_cm && !validateHeight(parseFloat(formData.height_cm))) {
-      newErrors.height_cm = 'Height must be 20-250 cm';
+
+    if (!formData.relationship) {
+      newErrors.relationship = 'Relationship is required';
     }
-    
-    if (formData.weight_kg && !validateWeight(parseFloat(formData.weight_kg))) {
-      newErrors.weight_kg = 'Weight must be 1-300 kg';
-    }
-    
-    if (formData.notes.length > 200) {
-      newErrors.notes = 'Notes must be max 200 characters';
-    }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+
   const handleSubmit = async () => {
-    if (!validate()) return;
+    if (!validateForm()) {
+      return;
+    }
 
     setLoading(true);
     try {
@@ -83,20 +109,12 @@ export default function AddPatient() {
         relationship: formData.relationship,
         gender: formData.gender,
       };
-      
-      if (formData.age_years) payload.age_years = parseInt(formData.age_years);
-      if (formData.phone) payload.phone = formData.phone.trim();
-      if (formData.height_cm) payload.height_cm = parseFloat(formData.height_cm);
-      if (formData.weight_kg) payload.weight_kg = parseFloat(formData.weight_kg);
-      if (formData.notes) payload.notes = formData.notes.trim();
 
       await api.createPatient(payload);
 
-      // Refresh bootstrap data
       await fetchBootstrap();
-      
-      // Navigate to next step
-      router.replace('/');
+
+      router.replace('/onboarding/device-onboarding');
     } catch (error: any) {
       Alert.alert('Error', error.response?.data?.message || 'Failed to add family member');
     } finally {
@@ -104,125 +122,147 @@ export default function AddPatient() {
     }
   };
 
+
+  const GenderSelector = () => {
+    const options = ['male', 'female', 'other'];
+
+    return (
+      <View style={styles.genderRow}>
+        {options.map((item) => {
+          const isActive = formData.gender === item;
+
+          return (
+            <TouchableOpacity
+              key={item}
+              style={[
+                styles.genderBtn,
+                isActive && styles.genderBtnActive,
+              ]}
+              onPress={() => updateField('gender', item)}
+            >
+              <Text
+                style={[
+                  styles.genderText,
+                  isActive && styles.genderTextActive,
+                ]}
+              >
+                {item.charAt(0).toUpperCase() + item.slice(1)}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    );
+  };
+
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
+    <View style={styles.container}>
       <KeyboardAvoidingView
+        style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardView}
       >
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name='arrow-back-outline'/>
-          </TouchableOpacity>
+        <ScrollView
+          contentContainerStyle={styles.content}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+
           <View style={styles.header}>
             <Text style={styles.title}>Add Family Member</Text>
             <Text style={styles.subtitle}>
-              Add details for vitals monitoring
+              Add a family member to start monitoring
             </Text>
           </View>
 
-          <View style={styles.form}>
-            <Input
-              label="Full Name *"
+          <Text style={styles.label}>Full Name</Text>
+          <View style={styles.inputBox}>
+            <Ionicons name="person-outline" size={18} color={Colors.lightGrey} />
+            <TextInput
               placeholder="Enter full name"
+              placeholderTextColor={Colors.TextSecondary}
               value={formData.full_name}
               onChangeText={(text) => updateField('full_name', text)}
-              error={errors.full_name}
-            />
-
-            <View style={styles.pickerContainer}>
-              <Text style={styles.pickerLabel}>Relationship *</Text>
-              <View style={styles.pickerWrapper}>
-                <Picker
-                  selectedValue={formData.relationship}
-                  onValueChange={(value) => updateField('relationship', value)}
-                  style={styles.picker}
-                >
-                  <Picker.Item label="Self" value="self" />
-                  <Picker.Item label="Spouse" value="spouse" />
-                  <Picker.Item label="Parent" value="parent" />
-                  <Picker.Item label="Child" value="child" />
-                  <Picker.Item label="Sibling" value="sibling" />
-                  <Picker.Item label="Grandparent" value="grandparent" />
-                  <Picker.Item label="Other" value="other" />
-                </Picker>
-              </View>
-            </View>
-
-            <View style={styles.pickerContainer}>
-              <Text style={styles.pickerLabel}>Gender *</Text>
-              <View style={styles.pickerWrapper}>
-                <Picker
-                  selectedValue={formData.gender}
-                  onValueChange={(value) => updateField('gender', value)}
-                  style={styles.picker}
-                >
-                  <Picker.Item label="Male" value="male" />
-                  <Picker.Item label="Female" value="female" />
-                  <Picker.Item label="Other" value="other" />
-                </Picker>
-              </View>
-            </View>
-
-            <Input
-              label="Age (Years)"
-              placeholder="Enter age"
-              value={formData.age_years}
-              onChangeText={(text) => updateField('age_years', text)}
-              keyboardType="number-pad"
-              error={errors.age_years}
-            />
-
-            <Input
-              label="Phone (Optional)"
-              placeholder="Enter phone number"
-              value={formData.phone}
-              onChangeText={(text) => updateField('phone', text)}
-              keyboardType="phone-pad"
-              error={errors.phone}
-            />
-
-            <Input
-              label="Height (cm)"
-              placeholder="Enter height in cm"
-              value={formData.height_cm}
-              onChangeText={(text) => updateField('height_cm', text)}
-              keyboardType="decimal-pad"
-              error={errors.height_cm}
-            />
-
-            <Input
-              label="Weight (kg)"
-              placeholder="Enter weight in kg"
-              value={formData.weight_kg}
-              onChangeText={(text) => updateField('weight_kg', text)}
-              keyboardType="decimal-pad"
-              error={errors.weight_kg}
-            />
-
-            <Input
-              label="Notes (Optional)"
-              placeholder="Any additional notes"
-              value={formData.notes}
-              onChangeText={(text) => updateField('notes', text)}
-              multiline
-              numberOfLines={2}
-              maxLength={200}
-              style={{ height: 60, textAlignVertical: 'top', paddingTop: 12 }}
-              error={errors.notes}
-            />
-
-            <Button
-              title="Add Family Member"
-              onPress={handleSubmit}
-              loading={loading}
-              disabled={loading}
-              style={styles.button}
+              style={styles.input}
             />
           </View>
+          {errors.full_name && <Text style={styles.errorText}>{errors.full_name}</Text>}
+
+          <Text style={styles.label}>Age / Date of Birth</Text>
+          <TouchableOpacity
+            style={styles.inputBox}
+            onPress={() => setShowDate(true)}
+          >
+            <Ionicons name="calendar-outline" size={18} color={Colors.lightGrey} />
+            <Text style={styles.inputText}>
+              {dob ? formatDate(dob) : 'Select Date of Birth'}
+            </Text>
+          </TouchableOpacity>
+
+          {showDate && (
+            <DateTimePicker
+              value={dob || new Date()}
+              mode="date"
+              display="default"
+              onChange={(event, selectedDate) => {
+                setShowDate(false);
+                if (selectedDate) {
+                  setDob(selectedDate);
+                  setErrors({ ...errors, dob: '' });
+                }
+              }}
+            />
+          )}
+          {errors.dob && <Text style={styles.errorText}>{errors.dob}</Text>}
+
+          <Text style={styles.label}>Gender</Text>
+          <GenderSelector />
+
+          <Text style={styles.label}>Relationship</Text>
+          <View style={styles.dropdownContainer}>
+            <TouchableOpacity
+              style={styles.dropdownButton}
+              onPress={() => setShowRelationshipDropdown(!showRelationshipDropdown)}
+            >
+              <Ionicons name="people-outline" size={20} color={Colors.lightGrey} style={styles.sellerIcon} />
+              <Text style={styles.dropdownText}>
+                {formData.relationship}
+              </Text>
+              <Ionicons
+                name={showRelationshipDropdown ? "chevron-up" : "chevron-down"}
+                size={16}
+                color={Colors.Primary}
+              />
+            </TouchableOpacity>
+
+            {showRelationshipDropdown && (
+              <View style={styles.dropdownList}>
+                {relationshipOptions.map((item, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={styles.dropdownItem}
+                    onPress={() => {
+                      updateField('relationship', item);
+                      setShowRelationshipDropdown(false);
+                    }}
+                  >
+                    <Text style={styles.dropdownItemText}>{item}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+          </View>
+
+          <TouchableOpacity style={styles.primaryBtn} onPress={handleSubmit} disabled={loading}>
+            <Text style={styles.primaryText}>{loading ? 'Saving...' : 'Save Member'}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.secondaryBtn} onPress={() => router.navigate('/(tabs)/dashboard')}>
+            <Text style={styles.secondaryText}>Skip for Now</Text>
+          </TouchableOpacity>
+
         </ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -231,49 +271,163 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.Background,
   },
-  keyboardView: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
+
+  content: {
     padding: Spacing.lg,
+    paddingBottom: Spacing.xl,
   },
+
   header: {
     marginBottom: Spacing.lg,
   },
+
   title: {
     ...Typography.H1,
-    fontSize: 24,
     color: Colors.TextPrimary,
-    marginBottom: Spacing.sm,
   },
+
   subtitle: {
-    ...Typography.Body,
+    ...Typography.BodySmall,
     color: Colors.TextSecondary,
+    marginTop: Spacing.xs,
   },
-  form: {
-    flex: 1,
-  },
-  pickerContainer: {
-    marginBottom: Spacing.md,
-  },
-  pickerLabel: {
+
+  label: {
     ...Typography.BodySmall,
     color: Colors.TextPrimary,
     marginBottom: Spacing.xs,
     fontWeight: '500',
   },
-  pickerWrapper: {
+
+  inputBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: Spacing.sm,
+    borderRadius: BorderRadius.lg,
     borderWidth: 1,
     borderColor: Colors.Border,
-    borderRadius: 8,
+    backgroundColor: Colors.Surface,
+    marginBottom: Spacing.md,
+  },
+
+  input: {
+    marginLeft: Spacing.xs,
+    flex: 1,
+    color: Colors.TextPrimary,
+  },
+
+  inputText: {
+    marginLeft: Spacing.sm,
+    color: Colors.TextPrimary,
+    marginVertical: Spacing.sm,
+  },
+
+  genderRow: {
+    flexDirection: 'row',
+    gap: Spacing.sm,
+    marginBottom: Spacing.md,
+  },
+
+  genderBtn: {
+    flex: 1,
+    paddingVertical: Spacing.sm,
+    borderRadius: BorderRadius.lg,
+    borderWidth: 1,
+    borderColor: Colors.Border,
+    alignItems: 'center',
     backgroundColor: Colors.Surface,
   },
-  picker: {
-    height: 48,
+
+  genderBtnActive: {
+    backgroundColor: Colors.PrimaryLight,
+    borderColor: Colors.Primary,
   },
-  button: {
-    marginTop: Spacing.md,
-    marginBottom: Spacing.xl,
+
+  genderText: {
+    ...Typography.BodySmall,
+    color: Colors.TextSecondary,
+  },
+
+  genderTextActive: {
+    color: Colors.Primary,
+    fontWeight: '600',
+  },
+
+  primaryBtn: {
+    marginTop: Spacing.lg,
+    backgroundColor: Colors.Primary,
+    paddingVertical: Spacing.md,
+    borderRadius: BorderRadius.xl,
+    alignItems: 'center',
+  },
+
+  primaryText: {
+    color: Colors.TextWhite,
+    fontWeight: '600',
+    fontSize: 16,
+  },
+
+  secondaryBtn: {
+    marginTop: Spacing.sm,
+    backgroundColor: Colors.Border,
+    paddingVertical: Spacing.md,
+    borderRadius: BorderRadius.xl,
+    alignItems: 'center',
+  },
+
+  secondaryText: {
+    color: Colors.TextSecondary,
+    fontWeight: '500',
+  },
+  dropdownContainer: {
+    marginBottom: Spacing.md,
+  },
+  dropdownButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: Colors.Surface,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    minHeight: 50,
+    borderWidth: 1,
+    borderColor: Colors.Border,
+  },
+  sellerIcon: {
+    marginRight: Spacing.sm,
+  },
+  dropdownText: {
+    flex: 1,
+    fontSize: 14,
+    color: Colors.TextPrimary,
+  },
+  dropdownList: {
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    right: 0,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: Colors.Border,
+    maxHeight: 200,
+    zIndex: 1000,
+  },
+  dropdownItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.Border,
+  },
+  dropdownItemText: {
+    fontSize: 14,
+    color: Colors.TextPrimary,
+  },
+  errorText: {
+    ...Typography.Caption,
+    color: Colors.Error,
+    marginTop: Spacing.xs,
+    marginBottom: Spacing.sm,
   },
 });

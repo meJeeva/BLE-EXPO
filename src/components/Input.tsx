@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.md,
     paddingHorizontal: Spacing.md,
     backgroundColor: Colors.Surface,
-    ...Typography.Body,
+    ...Typography.BodySmall,
     color: Colors.TextPrimary,
   },
   inputError: {

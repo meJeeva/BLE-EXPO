@@ -11,6 +11,7 @@ import {
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation, DrawerActions } from '@react-navigation/native';
 import { useAppStore } from '../../src/store/appStore';
 import { useAuthStore } from '../../src/store/authStore';
 import { VitalCard } from '../../src/components/VitalCard';
@@ -21,7 +22,8 @@ import { formatTemperature } from '../../src/utils/helpers';
 
 export default function Dashboard() {
   const router = useRouter();
-  const { bootstrapData } = useAuthStore();
+  const navigation = useNavigation();
+  const { logout, bootstrapData } = useAuthStore();
   const {
     currentPatient,
     latestVitals,
@@ -59,6 +61,20 @@ export default function Dashboard() {
     }
   };
 
+  const handleLogout = () => {
+    Alert.alert('Logout', 'Are you sure you want to logout?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Logout',
+        style: 'destructive',
+        onPress: async () => {
+          await logout();
+          router.replace('/login');
+        },
+      },
+    ]);
+  };
+
   if (!currentPatient) {
     return (
       <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -79,7 +95,15 @@ export default function Dashboard() {
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
+    <View style={styles.container}>
+      {/* Floating Menu Button - Outside ScrollView */}
+      <TouchableOpacity
+        style={styles.floatingMenuButton}
+        onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+      >
+        <Ionicons name="menu" size={24} color={Colors.Surface} />
+      </TouchableOpacity>
+
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         refreshControl={
@@ -168,7 +192,7 @@ export default function Dashboard() {
               }
               unit=""
               color="#9C27B0"
-              style={[styles.vitalCard, { flex: 1 }]}
+              style={styles.vitalCard}
             />
           </View>
         ) : (
@@ -197,10 +221,17 @@ export default function Dashboard() {
               <Ionicons name="bluetooth-outline" size={32} color={Colors.Primary} />
               <Text style={styles.actionText}>Connect Device</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.actionCard, styles.logoutCard]}
+              onPress={handleLogout}
+            >
+              <Ionicons name="log-out-outline" size={32} color={Colors.Error} />
+              <Text style={[styles.actionText, styles.logoutText]}>Logout</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -208,6 +239,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.Background,
+    position: 'relative',
   },
   scrollContent: {
     padding: Spacing.md,
@@ -292,6 +324,7 @@ const styles = StyleSheet.create({
   actionButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    flexWrap: 'wrap',
   },
   actionCard: {
     flex: 1,
@@ -300,14 +333,23 @@ const styles = StyleSheet.create({
     padding: Spacing.lg,
     alignItems: 'center',
     marginHorizontal: Spacing.xs,
+    marginBottom: Spacing.sm,
     borderWidth: 1,
     borderColor: Colors.Border,
+    minWidth: '30%',
+  },
+  logoutCard: {
+    borderColor: Colors.Error,
+    backgroundColor: Colors.Error + '10',
   },
   actionText: {
     ...Typography.BodySmall,
     color: Colors.TextPrimary,
     marginTop: Spacing.sm,
     fontWeight: '500',
+  },
+  logoutText: {
+    color: Colors.Error,
   },
   addButton: {
     backgroundColor: Colors.Primary,
@@ -323,5 +365,25 @@ const styles = StyleSheet.create({
     color: Colors.Surface,
     marginLeft: Spacing.sm,
     fontWeight: '600',
+  },
+  floatingMenuButton: {
+    position: 'absolute',
+    top: 50,
+    left: 15,
+    backgroundColor: Colors.Primary,
+    borderRadius: 25,
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 8,
+    zIndex: 1000,
   },
 });
