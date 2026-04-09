@@ -62,6 +62,8 @@ export default function RootLayout() {
           <Stack.Screen name="patients/edit" options={{ title: 'Edit Family Member' }} />
           <Stack.Screen name="session/[id]" options={{ title: 'Session Details' }} />
           <Stack.Screen name="hospital-mode" options={{ title: 'Hospital Mode' }} />
+          <Stack.Screen name="startMeasurement" options={{ headerTitle: 'Start Measurement', headerStyle: { backgroundColor: Colors.Background }, headerTitleAlign: 'center', headerTintColor: Colors.IconBlack }} />
+          <Stack.Screen name="measurementScreen" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />
         </Stack>
       </SafeAreaProvider>
     </GestureHandlerRootView>

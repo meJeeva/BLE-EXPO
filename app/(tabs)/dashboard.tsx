@@ -1,389 +1,298 @@
-import React, { useEffect, useState } from 'react';
+import { BorderRadius, Colors, Spacing, Typography } from '@/src/constants/theme';
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
-  RefreshControl,
-  Alert,
+  ScrollView,
+  ViewStyle,
+  TextStyle,
 } from 'react-native';
-import { useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, DrawerActions } from '@react-navigation/native';
-import { useAppStore } from '../../src/store/appStore';
-import { useAuthStore } from '../../src/store/authStore';
-import { VitalCard } from '../../src/components/VitalCard';
-import { Loading } from '../../src/components/Loading';
-import { EmptyState } from '../../src/components/EmptyState';
-import { Colors, Typography, Spacing, BorderRadius } from '../../src/constants/theme';
-import { formatTemperature } from '../../src/utils/helpers';
+import { useRouter } from 'expo-router';
 
-export default function Dashboard() {
-  const router = useRouter();
-  const navigation = useNavigation();
-  const { logout, bootstrapData } = useAuthStore();
-  const {
-    currentPatient,
-    latestVitals,
-    isLoadingVitals,
-    temperatureUnit,
-    toggleTemperatureUnit,
-    fetchLatestVitals,
-    fetchVitalsHistory,
-    isDemoMode,
-  } = useAppStore();
-  const [refreshing, setRefreshing] = useState(false);
+const devices = [
+  {
+    id: '1',
+    name: 'Living Room Device',
+    code: 'VTZ-001',
+    status: 'Available',
+    battery: '85%',
+  },
+  {
+    id: '2',
+    name: 'Bedroom Device',
+    code: 'VTZ-002',
+    status: 'In Use',
+    battery: '42%',
+  },
+];
 
-  useEffect(() => {
-    // Set first patient as current if not set
-    if (!currentPatient && bootstrapData?.patients && bootstrapData.patients.length > 0) {
-      useAppStore.getState().setCurrentPatient(bootstrapData.patients[0]);
-    }
-  }, [bootstrapData]);
+const members = [
+  {
+    id: '1',
+    name: 'John Smith',
+    role: 'Self',
+    age: 45,
+    time: '2 hours ago',
+  },
+  {
+    id: '2',
+    name: 'Sarah Smith',
+    role: 'Spouse',
+    age: 42,
+    time: '1 day ago',
+  },
+  {
+    id: '3',
+    name: 'Emma Smith',
+    role: 'Child',
+    age: 12,
+    time: 'Never',
+  },
+];
 
-  useEffect(() => {
-    if (currentPatient) {
-      fetchLatestVitals(currentPatient.id);
-      fetchVitalsHistory(currentPatient.id);
-    }
-  }, [currentPatient]);
+const DeviceCard = ({ item }: any) => {
+  const isAvailable = item.status === 'Available';
 
-  const handleRefresh = async () => {
-    if (!currentPatient) return;
-    setRefreshing(true);
-    try {
-      await fetchLatestVitals(currentPatient.id);
-      await fetchVitalsHistory(currentPatient.id);
-    } finally {
-      setRefreshing(false);
-    }
-  };
+  return (
+    <View style={styles.card}>
+      <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: Spacing.sm,
+      }}>
+        <View style={[{
+          backgroundColor: Colors.PrimaryLight,
+          padding: Spacing.sm,
+          borderRadius: 10
+        }]}>
+          <Ionicons name="phone-portrait" size={20} color={Colors.Primary} />
+        </View>
+        <View>
+          <Text style={styles.cardTitle}>{item.name}</Text>
+          <Text style={styles.cardSubtitle}>{item.code}</Text>
+        </View>
+      </View>
 
-  const handleLogout = () => {
-    Alert.alert('Logout', 'Are you sure you want to logout?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Logout',
-        style: 'destructive',
-        onPress: async () => {
-          await logout();
-          router.replace('/login');
-        },
-      },
-    ]);
-  };
-
-  if (!currentPatient) {
-    return (
-      <SafeAreaView style={styles.container} edges={['bottom']}>
-        <EmptyState
-          icon="person-add-outline"
-          title="No Family Members"
-          message="Add a family member to start monitoring vitals"
-        />
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => router.push('/patients/add')}
+      <View style={{ alignItems: 'flex-end' }}>
+        <View
+          style={[
+            styles.statusBadge,
+            { backgroundColor: isAvailable ? '#E6F0FF' : '#FFF4E5' },
+          ]}
         >
-          <Ionicons name="add" size={24} color={Colors.Surface} />
-          <Text style={styles.addButtonText}>Add Family Member</Text>
-        </TouchableOpacity>
-      </SafeAreaView>
-    );
-  }
+          <Ionicons name={isAvailable ? 'checkmark-circle' : 'alert-circle'} size={16} color={isAvailable ? Colors.Info : Colors.Warning} />
+          <Text
+            style={{
+              color: isAvailable ? Colors.Info : Colors.Warning,
+              fontSize: 12,
+            }}
+          >
+            {item.status}
+          </Text>
+        </View>
+        <Text style={styles.cardSubtitle}>{item.battery} battery</Text>
+      </View>
+    </View>
+  );
+};
+
+const MemberCard = ({ item }: any) => {
+  return (
+    <View style={styles.card}>
+      <View style={styles.avatar}>
+        <Text style={{ color: Colors.Warning }}>{item.name[0]}</Text>
+      </View>
+
+      <View style={{ flex: 1 }}>
+        <Text style={styles.cardTitle}>{item.name}</Text>
+        <Text style={styles.cardSubtitle}>
+          {item.role} • {item.age} years
+        </Text>
+      </View>
+
+      <View style={{ alignItems: 'flex-end' }}>
+        <Ionicons name="pulse" size={16} color={Colors.TextSecondary} />
+        <Text style={styles.cardSubtitle}>{item.time}</Text>
+      </View>
+    </View>
+  );
+};
+
+export default function HomeScreen() {
+  const router = useRouter();
+
+  const handleStartMeasurement = () => {
+    router.push('/startMeasurement');
+  };
 
   return (
     <View style={styles.container}>
-      {/* Floating Menu Button - Outside ScrollView */}
-      <TouchableOpacity
-        style={styles.floatingMenuButton}
-        onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
-      >
-        <Ionicons name="menu" size={24} color={Colors.Surface} />
-      </TouchableOpacity>
-
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-        }
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 20 }}
       >
-        {/* Patient Selector */}
-        <TouchableOpacity
-          style={styles.patientCard}
-          onPress={() => router.push('/(tabs)/family')}
-        >
-          <View style={styles.patientInfo}>
-            <Ionicons name="person-circle" size={48} color={Colors.Primary} />
-            <View style={styles.patientDetails}>
-              <Text style={styles.patientName}>{currentPatient.full_name}</Text>
-              <Text style={styles.patientMeta}>
-                {currentPatient.relationship} • {currentPatient.age_years || 'N/A'} years
-              </Text>
-            </View>
-          </View>
-          <Ionicons name="chevron-forward" size={24} color={Colors.TextSecondary} />
-        </TouchableOpacity>
-
-        {isDemoMode && (
-          <View style={styles.demoBanner}>
-            <Ionicons name="flask" size={20} color={Colors.Warning} />
-            <Text style={styles.demoBannerText}>Demo Mode Active - Sample Data</Text>
-          </View>
-        )}
-
-        {/* Temperature Unit Toggle */}
-        <View style={styles.header}>
-          <Text style={styles.sectionTitle}>Latest Vitals</Text>
-          <TouchableOpacity
-            style={styles.tempToggle}
-            onPress={toggleTemperatureUnit}
-          >
-            <Text style={styles.tempToggleText}>°{temperatureUnit}</Text>
-          </TouchableOpacity>
+        <View style={{
+          backgroundColor: Colors.TextWhite,
+          padding: Spacing.md,
+          paddingBottom: 0
+        }}>
+          <Text style={styles.header}>RAM</Text>
+          <Text style={styles.subHeader}>Welcome back!</Text>
         </View>
-
-        {/* Vitals Cards */}
-        {isLoadingVitals ? (
-          <Loading />
-        ) : latestVitals ? (
-          <View style={styles.vitalsGrid}>
-            <VitalCard
-              icon="water"
-              label="SpO2"
-              value={latestVitals.spo2 || '--'}
-              unit="%"
-              color="#2563EB"
-              style={styles.vitalCard}
-            />
-            <VitalCard
-              icon="heart"
-              label="Heart Rate"
-              value={latestVitals.heartRate || '--'}
-              unit="bpm"
-              color="#E53935"
-              style={styles.vitalCard}
-            />
-            <VitalCard
-              icon="pulse"
-              label="HRV"
-              value={latestVitals.hrv || '--'}
-              unit="ms"
-              color="#27AE60"
-              style={styles.vitalCard}
-            />
-            <VitalCard
-              icon="leaf"
-              label="Resp. Rate"
-              value={latestVitals.respiratoryRate || '--'}
-              unit="/min"
-              color="#F59E0B"
-              style={styles.vitalCard}
-            />
-            <VitalCard
-              icon="thermometer"
-              label="Temperature"
-              value={
-                latestVitals.temperature
-                  ? formatTemperature(latestVitals.temperature, temperatureUnit)
-                  : '--'
-              }
-              unit=""
-              color="#9C27B0"
-              style={styles.vitalCard}
-            />
+        <View style={{
+          padding: Spacing.md,
+        }}>
+          <View style={styles.sectionHeader}>
+            <View style={styles.sectionTitleContainer}>
+              <View style={styles.sectionIcon}>
+                <Ionicons name="phone-portrait" size={20} color={Colors.Primary} />
+              </View>
+              <Text style={styles.sectionTitle}>Devices</Text>
+            </View>
+            <Text style={styles.sectionRight}>2 devices</Text>
           </View>
-        ) : (
-          <EmptyState
-            icon="analytics-outline"
-            title="No Vitals Data"
-            message="No vitals recorded yet for this family member"
-          />
-        )}
 
-        {/* Quick Actions */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Quick Actions</Text>
-          <View style={styles.actionButtons}>
-            <TouchableOpacity
-              style={styles.actionCard}
-              onPress={() => router.push('/(tabs)/history' as any)}
-            >
-              <Ionicons name="time-outline" size={32} color={Colors.Primary} />
-              <Text style={styles.actionText}>View History</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.actionCard}
-              onPress={() => Alert.alert('BLE Stub', 'BLE device connection is a stub interface')}
-            >
-              <Ionicons name="bluetooth-outline" size={32} color={Colors.Primary} />
-              <Text style={styles.actionText}>Connect Device</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.actionCard, styles.logoutCard]}
-              onPress={handleLogout}
-            >
-              <Ionicons name="log-out-outline" size={32} color={Colors.Error} />
-              <Text style={[styles.actionText, styles.logoutText]}>Logout</Text>
-            </TouchableOpacity>
+          {devices.map((item) => (
+            <DeviceCard key={item.id} item={item} />
+          ))}
+
+          <View style={styles.sectionHeader}>
+            <View style={styles.sectionTitleContainer}>
+              <View style={styles.sectionIcon}>
+                <Ionicons name="people" size={20} color={Colors.Primary} />
+              </View>
+              <Text style={styles.sectionTitle}>Family Members</Text>
+            </View>
+            <Text style={styles.sectionRight}>+ Add</Text>
           </View>
+
+          {members.map((item) => (
+            <MemberCard key={item.id} item={item} />
+          ))}
+
+          <TouchableOpacity style={styles.button} onPress={handleStartMeasurement}>
+            <Text style={styles.buttonText}>Start Measurement</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create<{
+  container: ViewStyle;
+  header: TextStyle;
+  subHeader: TextStyle;
+  sectionHeader: ViewStyle;
+  sectionTitleContainer: ViewStyle;
+  sectionTitle: TextStyle;
+  sectionIcon: ViewStyle;
+  sectionRight: TextStyle;
+  card: ViewStyle;
+  cardTitle: TextStyle;
+  cardSubtitle: TextStyle;
+  statusBadge: ViewStyle;
+  avatar: ViewStyle;
+  button: ViewStyle;
+  buttonText: TextStyle;
+}>({
   container: {
     flex: 1,
     backgroundColor: Colors.Background,
-    position: 'relative',
   },
-  scrollContent: {
-    padding: Spacing.md,
-  },
-  patientCard: {
-    backgroundColor: Colors.Surface,
-    borderRadius: BorderRadius.lg,
-    padding: Spacing.md,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: Spacing.md,
-    borderWidth: 1,
-    borderColor: Colors.Border,
-  },
-  patientInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  patientDetails: {
-    marginLeft: Spacing.md,
-    flex: 1,
-  },
-  patientName: {
-    ...Typography.H2,
+
+  header: {
+    ...Typography.H1,
     color: Colors.TextPrimary,
   },
-  patientMeta: {
+
+  subHeader: {
     ...Typography.BodySmall,
     color: Colors.TextSecondary,
-    marginTop: 2,
-  },
-  demoBanner: {
-    backgroundColor: Colors.Warning + '20',
-    borderRadius: BorderRadius.md,
-    padding: Spacing.md,
-    flexDirection: 'row',
-    alignItems: 'center',
     marginBottom: Spacing.md,
   },
-  demoBannerText: {
-    ...Typography.BodySmall,
-    color: Colors.Warning,
-    marginLeft: Spacing.sm,
-    fontWeight: '600',
-  },
-  header: {
+
+  sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: Spacing.md,
+    marginVertical: Spacing.md,
   },
+
+  sectionTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
   sectionTitle: {
-    ...Typography.H2,
     color: Colors.TextPrimary,
-  },
-  tempToggle: {
-    backgroundColor: Colors.Primary,
-    borderRadius: BorderRadius.md,
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.sm,
-  },
-  tempToggleText: {
-    ...Typography.BodySmall,
-    color: Colors.Surface,
+    fontSize: 16,
     fontWeight: '600',
   },
-  vitalsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginHorizontal: -Spacing.xs,
+
+  sectionIcon: {
+    marginRight: Spacing.sm,
   },
-  vitalCard: {
-    width: '48%',
-    margin: Spacing.xs,
-    marginBottom: Spacing.sm,
+
+  sectionRight: {
+    color: Colors.Primary,
+    fontWeight: '600'
   },
-  section: {
-    marginTop: Spacing.lg,
-  },
-  actionButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-  },
-  actionCard: {
-    flex: 1,
+
+  card: {
     backgroundColor: Colors.Surface,
-    borderRadius: BorderRadius.lg,
-    padding: Spacing.lg,
-    alignItems: 'center',
-    marginHorizontal: Spacing.xs,
-    marginBottom: Spacing.sm,
-    borderWidth: 1,
-    borderColor: Colors.Border,
-    minWidth: '30%',
-  },
-  logoutCard: {
-    borderColor: Colors.Error,
-    backgroundColor: Colors.Error + '10',
-  },
-  actionText: {
-    ...Typography.BodySmall,
-    color: Colors.TextPrimary,
-    marginTop: Spacing.sm,
-    fontWeight: '500',
-  },
-  logoutText: {
-    color: Colors.Error,
-  },
-  addButton: {
-    backgroundColor: Colors.Primary,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
     padding: Spacing.md,
     borderRadius: BorderRadius.lg,
-    margin: Spacing.lg,
+    marginBottom: Spacing.sm,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  addButtonText: {
+
+  cardTitle: {
     ...Typography.Body,
-    color: Colors.Surface,
-    marginLeft: Spacing.sm,
+    color: Colors.TextPrimary,
     fontWeight: '600',
   },
-  floatingMenuButton: {
-    position: 'absolute',
-    top: 50,
-    left: 15,
-    backgroundColor: Colors.Primary,
-    borderRadius: 25,
-    width: 50,
-    height: 50,
-    justifyContent: 'center',
+
+  cardSubtitle: {
+    color: Colors.TextSecondary,
+    fontSize: 12,
+    fontWeight: '500'
+  },
+
+  statusBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 6,
+    marginBottom: 4,
+    flexDirection: 'row',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 8,
-    zIndex: 1000,
+    gap: Spacing.xs,
+  },
+
+  avatar: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#FFF4E5',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+
+  button: {
+    backgroundColor: Colors.Primary,
+    padding: 16,
+    alignItems: 'center',
+    borderRadius: BorderRadius.lg,
+    marginTop: Spacing.md,
+  },
+
+  buttonText: {
+    color: Colors.TextWhite,
+    fontWeight: '600',
   },
 });

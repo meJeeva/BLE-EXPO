@@ -20,7 +20,7 @@ export const Colors = {
   TextWhite: '#ffffff',
 
   IconBlack: '#000000',
-  lightGrey: '#A0AEC0'
+  lightGrey: '#A0AEC0',
 };
 
 export const Typography = {

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Stack, useNavigation } from 'expo-router';
+import { Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../../src/constants/theme';
-import { Drawer } from 'expo-router/drawer';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Drawer } from 'expo-router/drawer';
 
 function CustomDrawerContent({ navigation }: any) {
   const menuItems = [
@@ -39,56 +39,16 @@ function CustomDrawerContent({ navigation }: any) {
 
 export default function TabLayout() {
 
-  const navigation = useNavigation();
-
   return (
     <Drawer
-      drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
-        drawerStyle: {
-          backgroundColor: Colors.Surface,
-          width: 280,
-        },
-        headerStyle: {
-          backgroundColor: Colors.Primary,
-        },
-        headerTintColor: Colors.Surface,
-        headerTitleStyle: {
-          fontWeight: '600',
-        },
-        headerLeft: ({ onPress }) => (
-          <TouchableOpacity onPress={() => {
-            navigation.toggleDrawer();
-          }} style={styles.menuButton}>
-            <Ionicons name="menu" size={24} color={Colors.Surface} />
-          </TouchableOpacity>
-        ),
+        headerTitle: ''
       }}
     >
-      <Stack.Screen
-        name="dashboard"
-        options={{
-          title: 'Dashboard',
-        }}
-      />
-      <Stack.Screen
-        name="history"
-        options={{
-          title: 'History',
-        }}
-      />
-      <Stack.Screen
-        name="family"
-        options={{
-          title: 'Family',
-        }}
-      />
-      <Stack.Screen
-        name="settings"
-        options={{
-          title: 'Settings',
-        }}
-      />
+      <Drawer.Screen name="dashboard" />
+      <Drawer.Screen name="history" />
+      <Drawer.Screen name="family" />
+      <Drawer.Screen name="settings" />
     </Drawer>
   );
 }
