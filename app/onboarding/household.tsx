@@ -47,10 +47,7 @@ export default function CreateHousehold() {
         address: address.trim() || undefined,
       });
 
-      // Refresh bootstrap data
       await fetchBootstrap();
-
-      // Navigate to next step
       router.replace('/onboarding/add-patient');
     } catch (error: any) {
       Alert.alert('Error', error.response?.data?.message || 'Failed to create household');

@@ -60,10 +60,7 @@ export default function DeviceOnboarding() {
     try {
       await api.claimDevice(deviceId.trim());
 
-      // Refresh bootstrap data
       await fetchBootstrap();
-
-      // Navigate to dashboard
       router.replace('/(tabs)/dashboard');
     } catch (error: any) {
       setError(error.response?.data?.message || 'Failed to claim device');
@@ -156,7 +153,7 @@ export default function DeviceOnboarding() {
         }}>
           <Text style={[styles.manualEntryText, {
             marginTop: Spacing.lg,
-          }]}><Text style={{ fontSize: 24, fontWeight: 'bold' }}>ⲧ  </Text> Enter device ID manually</Text>
+          }]}><Text style={{ ...Typography.H1 }}>ⲧ  </Text> Enter device ID manually</Text>
         </TouchableOpacity>}
 
 
@@ -213,7 +210,6 @@ const styles = StyleSheet.create({
   },
   title: {
     ...Typography.H1,
-    fontSize: 24,
     color: Colors.TextPrimary,
     marginBottom: Spacing.sm,
   },
@@ -258,7 +254,6 @@ const styles = StyleSheet.create({
   button: {
     marginTop: Spacing.md,
   },
-  // Scanner styles
   scannerContainer: {
     flex: 0.9,
   },
@@ -268,7 +263,7 @@ const styles = StyleSheet.create({
   },
   scannerOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: Colors.Overlay,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -292,13 +287,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 50,
     right: 20,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: Colors.Overlay,
     borderRadius: 50,
     padding: Spacing.sm,
   },
   manualEntryText: {
+    ...Typography.BodySmall,
     color: Colors.Primary,
     textAlign: 'center',
-    fontWeight: '600',
   },
 });

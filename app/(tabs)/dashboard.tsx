@@ -80,7 +80,7 @@ const DeviceCard = ({ item }: any) => {
         <View
           style={[
             styles.statusBadge,
-            { backgroundColor: isAvailable ? '#E6F0FF' : '#FFF4E5' },
+            { backgroundColor: isAvailable ? Colors.SuccessStatus : Colors.WarningStatus },
           ]}
         >
           <Ionicons name={isAvailable ? 'checkmark-circle' : 'alert-circle'} size={16} color={isAvailable ? Colors.Info : Colors.Warning} />
@@ -103,7 +103,7 @@ const MemberCard = ({ item }: any) => {
   return (
     <View style={styles.card}>
       <View style={styles.avatar}>
-        <Text style={{ color: Colors.Warning }}>{item.name[0]}</Text>
+        <Text style={{ ...Typography.BodySmall, color: Colors.Warning }}>{item.name[0]}</Text>
       </View>
 
       <View style={{ flex: 1 }}>
@@ -227,9 +227,9 @@ const styles = StyleSheet.create<{
   },
 
   sectionTitle: {
+    ...Typography.H2,
     color: Colors.TextPrimary,
-    fontSize: 16,
-    fontWeight: '600',
+    marginBottom: Spacing.sm,
   },
 
   sectionIcon: {
@@ -238,7 +238,6 @@ const styles = StyleSheet.create<{
 
   sectionRight: {
     color: Colors.Primary,
-    fontWeight: '600'
   },
 
   card: {
@@ -254,19 +253,17 @@ const styles = StyleSheet.create<{
   cardTitle: {
     ...Typography.Body,
     color: Colors.TextPrimary,
-    fontWeight: '600',
   },
 
   cardSubtitle: {
+    ...Typography.BodySmall,
     color: Colors.TextSecondary,
-    fontSize: 12,
-    fontWeight: '500'
   },
 
   statusBadge: {
     paddingHorizontal: 8,
     paddingVertical: 2,
-    borderRadius: 6,
+    borderRadius: 8,
     marginBottom: 4,
     flexDirection: 'row',
     alignItems: 'center',
@@ -276,8 +273,8 @@ const styles = StyleSheet.create<{
   avatar: {
     width: 36,
     height: 36,
-    borderRadius: 18,
-    backgroundColor: '#FFF4E5',
+    borderRadius: 10,
+    backgroundColor: Colors.WarningStatus,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
@@ -293,6 +290,5 @@ const styles = StyleSheet.create<{
 
   buttonText: {
     color: Colors.TextWhite,
-    fontWeight: '600',
   },
 });

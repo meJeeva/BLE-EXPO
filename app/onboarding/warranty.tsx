@@ -191,9 +191,7 @@ export default function Warranty() {
 const WarrantyBenefitsCard = () => {
   return (
     <View style={styles.card}>
-      <Text style={[styles.title, {
-        fontSize: 14,
-      }]}>Warranty Benefits:</Text>
+      <Text style={styles.title}>Warranty Benefits:</Text>
 
       <Text style={styles.item}>• 2 years comprehensive warranty</Text>
       <Text style={styles.item}>• Free firmware updates</Text>
@@ -220,7 +218,6 @@ const styles = StyleSheet.create({
   },
   title: {
     ...Typography.H1,
-    fontSize: 24,
     color: Colors.TextPrimary,
     marginBottom: Spacing.sm,
   },
@@ -241,7 +238,7 @@ const styles = StyleSheet.create({
     marginVertical: 12,
   },
   item: {
-    fontSize: 13,
+    ...Typography.Caption,
     color: Colors.TextSecondary,
     marginBottom: 6,
     lineHeight: 18,
@@ -261,7 +258,7 @@ const styles = StyleSheet.create({
   },
   dropdownText: {
     flex: 1,
-    fontSize: 14,
+    ...Typography.Caption,
     color: Colors.TextPrimary,
   },
   dropdownList: {
@@ -286,7 +283,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.Border,
   },
   dropdownItemText: {
-    fontSize: 14,
+    ...Typography.Caption,
     color: Colors.TextPrimary,
   },
   inputContainer: {

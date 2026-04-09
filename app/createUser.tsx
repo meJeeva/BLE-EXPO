@@ -10,10 +10,9 @@ import {
     KeyboardAvoidingView,
     Platform,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { Colors } from '@/src/constants/theme';
+import { Colors, Typography } from '@/src/constants/theme';
 
 export default function CreateUser() {
     const router = useRouter();
@@ -44,16 +43,12 @@ export default function CreateUser() {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={styles.keyboardView}
             >
                 <ScrollView contentContainerStyle={styles.content}>
-
-                    <TouchableOpacity onPress={() => router.back()}>
-                        <Ionicons name="arrow-back" size={22} color="#333" />
-                    </TouchableOpacity>
 
                     <View style={styles.logoRow}>
                         <Image
@@ -72,7 +67,7 @@ export default function CreateUser() {
 
                         <Text style={styles.label}>Full Name</Text>
                         <View style={styles.inputContainer}>
-                            <Ionicons name="person-outline" size={18} color="#9CA3AF" />
+                            <Ionicons name="person-outline" size={18} color={Colors.Disabled} />
                             <TextInput
                                 placeholder="John Smith"
                                 style={styles.input}
@@ -85,7 +80,7 @@ export default function CreateUser() {
 
                         <Text style={styles.label}>Email Address</Text>
                         <View style={styles.inputContainer}>
-                            <Ionicons name="mail-outline" size={18} color="#9CA3AF" />
+                            <Ionicons name="mail-outline" size={18} color={Colors.Disabled} />
                             <TextInput
                                 placeholder="your@email.com"
                                 keyboardType="email-address"
@@ -100,7 +95,7 @@ export default function CreateUser() {
 
                         <Text style={styles.label}>Password</Text>
                         <View style={styles.inputContainer}>
-                            <Ionicons name="lock-closed-outline" size={18} color="#9CA3AF" />
+                            <Ionicons name="lock-closed-outline" size={18} color={Colors.Disabled} />
                             <TextInput
                                 placeholder="Minimum 4 characters"
                                 secureTextEntry={!showPassword}
@@ -117,14 +112,14 @@ export default function CreateUser() {
                                 <Ionicons
                                     name={showPassword ? "eye-off-outline" : "eye-outline"}
                                     size={18}
-                                    color="#9CA3AF"
+                                    color={Colors.Disabled}
                                 />
                             </TouchableOpacity>
                         </View>
 
                         <Text style={styles.label}>Confirm Password</Text>
                         <View style={styles.inputContainer}>
-                            <Ionicons name="lock-closed-outline" size={18} color="#9CA3AF" />
+                            <Ionicons name="lock-closed-outline" size={18} color={Colors.Disabled} />
                             <TextInput
                                 placeholder="Re-enter password"
                                 secureTextEntry={!showConfirmPassword}
@@ -141,7 +136,7 @@ export default function CreateUser() {
                                 <Ionicons
                                     name={showConfirmPassword ? "eye-off-outline" : "eye-outline"}
                                     size={18}
-                                    color="#9CA3AF"
+                                    color={Colors.Disabled}
                                 />
                             </TouchableOpacity>
                         </View>
@@ -168,7 +163,7 @@ export default function CreateUser() {
                     </Text>
                 </View>
             </KeyboardAvoidingView>
-        </SafeAreaView>
+        </View>
     );
 }
 
@@ -176,7 +171,7 @@ export default function CreateUser() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F9FAFB',
+        backgroundColor: Colors.Background,
     },
 
     keyboardView: {
@@ -185,6 +180,7 @@ const styles = StyleSheet.create({
 
     content: {
         padding: 20,
+        ...Typography.BodySmall,
     },
 
     logoRow: {
@@ -196,21 +192,19 @@ const styles = StyleSheet.create({
     },
 
     logoText: {
-        fontSize: 20,
-        fontWeight: '700',
+        ...Typography.H2,
         color: Colors.Primary,
     },
 
     title: {
-        fontSize: 20,
-        fontWeight: '700',
+        ...Typography.H2,
         color: Colors.TextPrimary,
         marginBottom: 6,
     },
 
     subtitle: {
-        fontSize: 14,
-        color: '#6B7280',
+        ...Typography.BodySmall,
+        color: Colors.TextSecondary,
         marginBottom: 20,
     },
 
@@ -219,16 +213,15 @@ const styles = StyleSheet.create({
     },
 
     label: {
-        fontSize: 13,
+        ...Typography.Caption,
         color: Colors.TextPrimary,
         marginBottom: 6,
-        fontWeight: '500'
     },
 
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#F3F4F6',
+        backgroundColor: Colors.Surface,
         borderRadius: 12,
         paddingHorizontal: 12,
         height: 50,
@@ -238,7 +231,7 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         marginLeft: 10,
-        fontSize: 14,
+        ...Typography.Body,
     },
 
     eyeIcon: {
@@ -248,6 +241,7 @@ const styles = StyleSheet.create({
 
     footer: {
         padding: 20,
+        ...Typography.H2,
     },
 
     button: {
@@ -264,8 +258,7 @@ const styles = StyleSheet.create({
 
     buttonText: {
         color: Colors.TextWhite,
-        fontWeight: '600',
-        fontSize: 15,
+        ...Typography.BodySmall,
     },
 
     buttonTextDisabled: {
@@ -273,14 +266,14 @@ const styles = StyleSheet.create({
     },
 
     terms: {
-        fontSize: 12,
+        ...Typography.Caption,
         textAlign: 'center',
         color: Colors.TextSecondary,
     },
 
     link: {
         color: Colors.Primary,
-        fontWeight: '600',
+        ...Typography.BodySmall,
     },
     logo: {
         width: 70,

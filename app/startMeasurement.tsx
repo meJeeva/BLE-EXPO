@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { BorderRadius, Colors, Spacing } from '@/src/constants/theme';
+import { BorderRadius, Colors, Typography, Spacing } from '@/src/constants/theme';
 
 
 const patients = [
@@ -41,7 +41,7 @@ const PatientItem = ({ item, isSelected, onSelect }: any) => (
         {isSelected ? (
             <Ionicons name="checkmark-circle" size={20} color={Colors.Primary} />
         ) : (
-            <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
+            <Ionicons name="chevron-forward" size={18} color={Colors.Disabled} />
         )}
     </TouchableOpacity>
 );
@@ -65,7 +65,7 @@ const DeviceItem = ({ item, isSelected, onSelect }: any) => (
         {isSelected ? (
             <Ionicons name="checkmark-circle" size={20} color={Colors.Primary} />
         ) : (
-            <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
+            <Ionicons name="chevron-forward" size={18} color={Colors.Disabled} />
         )}
     </TouchableOpacity>
 );
@@ -177,8 +177,7 @@ const styles = StyleSheet.create({
     },
 
     headerTitle: {
-        fontSize: 16,
-        fontWeight: '600',
+        ...Typography.HeaderTitle,
         color: Colors.TextPrimary,
     },
 
@@ -195,8 +194,7 @@ const styles = StyleSheet.create({
     },
 
     sectionTitle: {
-        fontSize: 14,
-        fontWeight: '600',
+        ...Typography.SectionTitle,
         color: Colors.TextPrimary,
     },
 
@@ -219,13 +217,12 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        fontSize: 15,
-        fontWeight: '600',
+        ...Typography.CardTitle,
         color: Colors.TextPrimary,
     },
 
     subtitle: {
-        fontSize: 12,
+        ...Typography.Caption,
         color: Colors.TextSecondary,
         marginTop: 2,
     },
@@ -241,7 +238,6 @@ const styles = StyleSheet.create({
 
     avatarText: {
         color: Colors.Info,
-        fontWeight: '600',
     },
 
     deviceIcon: {
@@ -261,8 +257,8 @@ const styles = StyleSheet.create({
     },
 
     buttonText: {
+        ...Typography.ButtonText,
         color: Colors.TextWhite,
-        fontWeight: '600',
     },
 
     selectedCard: {

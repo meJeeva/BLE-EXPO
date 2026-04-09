@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Spacing } from '@/src/constants/theme';
+import { Colors, Typography, Spacing } from '@/src/constants/theme';
 import { Button } from '@/src/components/Button';
 import { useRouter } from 'expo-router';
 
@@ -21,7 +21,7 @@ export default function OwnershipConfirmedScreen() {
                 {/* Success Icon */}
                 <View style={styles.iconWrapper}>
                     <View style={styles.iconCircle}>
-                        <Ionicons name="checkmark" size={28} color="#16A34A" />
+                        <Ionicons name="checkmark" size={28} color={Colors.Secondary} />
                     </View>
                 </View>
 
@@ -35,7 +35,7 @@ export default function OwnershipConfirmedScreen() {
                 <View style={styles.card}>
                     <View style={styles.cardHeader}>
                         <View style={styles.cardIcon}>
-                            <Ionicons name="shield-outline" size={20} color="#2563EB" />
+                            <Ionicons name="shield-outline" size={20} color={Colors.Secondary} />
                         </View>
 
                         <View>
@@ -49,7 +49,7 @@ export default function OwnershipConfirmedScreen() {
                     <View style={styles.divider} />
 
                     <View style={styles.validRow}>
-                        <Ionicons name="calendar-outline" size={18} color="#6B7280" />
+                        <Ionicons name="calendar-outline" size={18} color={Colors.TextSecondary} />
                         <View style={{ marginLeft: 10 }}>
                             <Text style={styles.validLabel}>Valid Until</Text>
                             <Text style={styles.validDate}>January 10, 2028</Text>
@@ -66,7 +66,7 @@ export default function OwnershipConfirmedScreen() {
                     ].map((item, index) => (
                         <View key={index} style={styles.listItem}>
                             <View style={styles.checkIcon}>
-                                <Ionicons name="checkmark" size={14} color="#16A34A" />
+                                <Ionicons name="checkmark" size={14} color={Colors.Secondary} />
                             </View>
                             <Text style={styles.listText}>{item}</Text>
                         </View>
@@ -113,15 +113,14 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        fontSize: 20,
-        fontWeight: '700',
-        color: '#111827',
+        ...Typography.H2,
+        color: Colors.TextPrimary,
         marginBottom: 6,
     },
 
     subtitle: {
-        fontSize: 14,
-        color: '#6B7280',
+        ...Typography.BodySmall,
+        color: Colors.TextSecondary,
         marginBottom: 24,
     },
 
@@ -154,9 +153,9 @@ const styles = StyleSheet.create({
     },
 
     cardTitle: {
-        fontSize: 14,
+        ...Typography.BodySmall,
         fontWeight: '600',
-        color: '#111827',
+        color: Colors.TextPrimary,
     },
 
     cardSubtitle: {
@@ -176,14 +175,14 @@ const styles = StyleSheet.create({
     },
 
     validLabel: {
-        fontSize: 11,
-        color: '#6B7280',
+        ...Typography.Caption,
+        color: Colors.TextSecondary,
     },
 
     validDate: {
-        fontSize: 13,
+        ...Typography.Caption,
         fontWeight: '600',
-        color: '#111827',
+        color: Colors.TextPrimary,
     },
 
     /* ✅ List */
@@ -208,8 +207,8 @@ const styles = StyleSheet.create({
     },
 
     listText: {
-        fontSize: 13,
-        color: '#374151',
+        ...Typography.Caption,
+        color: Colors.TextSecondary,
     },
     button: {
         marginVertical: Spacing.md,

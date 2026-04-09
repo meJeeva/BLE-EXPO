@@ -83,21 +83,20 @@ const styles = StyleSheet.create({
   },
 
   deviceName: {
-    fontSize: 16,
-    fontWeight: "600",
+    ...Typography.Body,
     color: Colors.TextPrimary,
     marginVertical:2
   },
 
   deviceId: {
-    fontSize: 12,
+    ...Typography.Caption,
     color: Colors.TextSecondary,
     marginTop: 4,
     marginBottom: 10,
   },
 
   badge: {
-    backgroundColor: "#FFE9E6",
+    backgroundColor: Colors.BadgeBg,
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 12,
@@ -108,8 +107,7 @@ const styles = StyleSheet.create({
 
   badgeText: {
     color: Colors.Warning,
-    fontSize: 12,
-    fontWeight: "500",
+    ...Typography.Caption,
   },
 
   infoBox: {
@@ -120,7 +118,7 @@ const styles = StyleSheet.create({
   },
 
   infoText: {
-    fontSize: 13,
+    ...Typography.BodySmall,
     color: Colors.TextPrimary,
   },
 
@@ -137,7 +135,6 @@ const styles = StyleSheet.create({
 
   buttonText: {
     color: Colors.TextWhite,
-    fontSize: 16,
-    fontWeight: "600",
+    ...Typography.Body,
   },
 });

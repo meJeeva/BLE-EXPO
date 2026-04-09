@@ -7,13 +7,13 @@ import {
   Image,
   Animated,
   Alert,
-  TextInput,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { Colors } from '@/src/constants/theme';
+import { Colors, Typography } from '@/src/constants/theme';
 import { Input } from '@/src/components/Input';
+import AnimatedWave from '@/src/components/AnimatedWave';
 import { validateEmail, validatePhone } from '@/src/utils/helpers';
 import { useAuthStore } from '@/src/store/authStore';
 
@@ -120,7 +120,6 @@ export default function LoginLanding() {
   const handleSubmit = async () => {
     setError('');
 
-    console.log('step', step)
 
     if (step === 'phone') {
       if (!phone.trim()) {
@@ -132,8 +131,6 @@ export default function LoginLanding() {
         setError('Please enter a valid phone number (10-15 digits)');
         return;
       }
-
-      console.log('after validation')
 
       setLoading(true);
       try {
@@ -173,65 +170,23 @@ export default function LoginLanding() {
         step === 'landing' && (
           <>
             <View style={styles.waveContainer}>
-              <Animated.View
-                style={[
-                  styles.waveCircle,
-                  styles.wave1,
-                  {
-                    transform: [
-                      {
-                        translateY: wave1.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [0, -30],
-                        }),
-                      },
-                    ],
-                    opacity: wave1.interpolate({
-                      inputRange: [0, 0.5, 1],
-                      outputRange: [0.3, 0.6, 0.3],
-                    }),
-                  },
-                ]}
+              <AnimatedWave
+                style={styles.wave1}
+                translateYValue={wave1}
+                translateYRange={[0, -30]}
+                opacityRange={[0.3, 0.6, 0.3]}
               />
-              <Animated.View
-                style={[
-                  styles.waveCircle,
-                  styles.wave2,
-                  {
-                    transform: [
-                      {
-                        translateY: wave2.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [0, -40],
-                        }),
-                      },
-                    ],
-                    opacity: wave2.interpolate({
-                      inputRange: [0, 0.5, 1],
-                      outputRange: [0.2, 0.5, 0.2],
-                    }),
-                  },
-                ]}
+              <AnimatedWave
+                style={styles.wave2}
+                translateYValue={wave2}
+                translateYRange={[0, -40]}
+                opacityRange={[0.2, 0.5, 0.2]}
               />
-              <Animated.View
-                style={[
-                  styles.waveCircle,
-                  styles.wave3,
-                  {
-                    transform: [
-                      {
-                        translateY: wave3.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [0, -35],
-                        }),
-                      },
-                    ],
-                    opacity: wave3.interpolate({
-                      inputRange: [0, 0.5, 1],
-                      outputRange: [0.25, 0.4, 0.25],
-                    }),
-                  },
-                ]}
+              <AnimatedWave
+                style={styles.wave3}
+                translateYValue={wave3}
+                translateYRange={[0, -35]}
+                opacityRange={[0.25, 0.4, 0.25]}
               />
             </View>
 
@@ -333,7 +288,6 @@ export default function LoginLanding() {
       }
       {step === 'phone' && (
         <View style={styles.phoneContainer}>
-          {/* Back */}
           <TouchableOpacity onPress={() => setStep('landing')}>
             <Ionicons name="arrow-back" size={24} />
           </TouchableOpacity>
@@ -356,7 +310,7 @@ export default function LoginLanding() {
           </Text>
 
           <View style={styles.inputWithIconContainer}>
-            <Ionicons name="call-outline" size={20} color="#999" style={styles.inputIcon} />
+            <Ionicons name="call-outline" size={20} color={Colors.InputIcon} style={styles.inputIcon} />
             <Input
               label="Phone Number"
               placeholder="+91 98765 43210"
@@ -370,7 +324,6 @@ export default function LoginLanding() {
             />
           </View>
 
-          {/* Error Message */}
           {error && (
             <View style={styles.errorContainer}>
               <Ionicons name="warning-outline" size={14} color={Colors.Error} />
@@ -393,7 +346,6 @@ export default function LoginLanding() {
       )}
       {step === 'email' && (
         <View style={styles.phoneContainer}>
-          {/* Back */}
           <TouchableOpacity onPress={() => setStep('landing')}>
             <Ionicons name="arrow-back" size={24} />
           </TouchableOpacity>
@@ -415,9 +367,8 @@ export default function LoginLanding() {
             Enter your email and password
           </Text>
 
-          {/* Email Input */}
           <View style={styles.inputWithIconContainer}>
-            <Ionicons name="mail-outline" size={20} color="#999" style={styles.inputIcon} />
+            <Ionicons name="mail-outline" size={20} color={Colors.InputIcon} style={styles.inputIcon} />
             <Input
               label="Email Address"
               placeholder="john@example.com"
@@ -430,9 +381,8 @@ export default function LoginLanding() {
             />
           </View>
 
-          {/* Password Input */}
           <View style={styles.inputWithIconContainer}>
-            <Ionicons name="lock-closed-outline" size={20} color="#999" style={styles.inputIcon} />
+            <Ionicons name="lock-closed-outline" size={20} color={Colors.InputIcon} style={styles.inputIcon} />
             <Input
               label="Password"
               placeholder="Enter your password"
@@ -449,12 +399,11 @@ export default function LoginLanding() {
               <Ionicons
                 name={showPassword ? "eye-off-outline" : "eye-outline"}
                 size={20}
-                color="#999"
+                color={Colors.InputIcon}
               />
             </TouchableOpacity>
           </View>
 
-          {/* Error Message */}
           {error && (
             <View style={styles.errorContainer}>
               <Ionicons name="warning-outline" size={14} color={Colors.Error} />
@@ -462,7 +411,6 @@ export default function LoginLanding() {
             </View>
           )}
 
-          {/* Button at bottom */}
           <TouchableOpacity style={[styles.primaryButton, {
             position: 'absolute',
             bottom: 20,
@@ -493,13 +441,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     overflow: 'hidden',
   },
-  waveCircle: {
-    position: 'absolute',
-    width: 300,
-    height: 300,
-    borderRadius: 150,
-    backgroundColor: Colors.PrimaryLight,
-  },
   wave1: {
     top: -100,
     right: -100,
@@ -529,18 +470,17 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   appName: {
-    fontSize: 24,
-    fontWeight: '700',
+    ...Typography.H1,
     color: Colors.Primary,
     marginBottom: 4,
   },
   tagline: {
-    fontSize: 14,
+    ...Typography.BodySmall,
     color: Colors.TextSecondary,
     fontWeight: '600'
   },
   subTagline: {
-    fontSize: 12,
+    ...Typography.Caption,
     color: Colors.TextSecondary,
     marginBottom: 16,
   },
@@ -558,7 +498,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   badgeText: {
-    fontSize: 12,
+    ...Typography.Caption,
     color: Colors.TextSecondary,
   },
   heartWrapper: {
@@ -599,6 +539,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   primaryText: {
+    ...Typography.Body,
     color: Colors.TextWhite,
     fontWeight: '600',
   },
@@ -614,15 +555,17 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   secondaryText: {
+    ...Typography.Body,
     color: Colors.primaryBackground,
     fontWeight: '500',
   },
   signupText: {
     textAlign: 'center',
-    fontSize: 13,
+    ...Typography.BodySmall,
     color: Colors.TextSecondary,
   },
   signupLink: {
+    ...Typography.BodySmall,
     color: Colors.primaryBackground,
     fontWeight: '600',
   },
@@ -633,14 +576,13 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 22,
-    fontWeight: '700',
+    ...Typography.H1,
     marginTop: 20,
   },
 
   subtitle: {
-    fontSize: 14,
-    color: '#777',
+    ...Typography.BodySmall,
+    color: Colors.SubtitleText,
     marginBottom: 20,
   },
 
@@ -648,7 +590,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: Colors.InputBorder,
     borderRadius: 10,
     paddingHorizontal: 12,
   },
@@ -657,6 +599,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 50,
     marginLeft: 10,
+    ...Typography.Body,
     color: Colors.TextPrimary,
     fontWeight: '500'
   },
@@ -667,11 +610,12 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   warningText: {
-    fontSize: 12,
+    ...Typography.Caption,
     color: Colors.Error,
     flex: 1,
   },
   label: {
+    ...Typography.BodySmall,
     fontWeight: '500',
     marginTop: 20,
     marginBottom: 5
@@ -706,7 +650,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   errorText: {
-    fontSize: 12,
+    ...Typography.Caption,
     color: Colors.Error,
     flex: 1,
   },

@@ -21,33 +21,65 @@ export const Colors = {
 
   IconBlack: '#000000',
   lightGrey: '#A0AEC0',
+  
+  InputIcon: '#999999',
+  SubtitleText: '#777777',
+  InputBorder: '#E2E8F0',
+  Overlay: 'rgba(0,0,0,0.5)',
+  BadgeBg: '#FFE9E6',
+  SuccessBg: '#E6F7EE',
+  BannerBg: '#E6F9ED',
+  DropdownBg: '#FFFFFF',
+  SuccessStatus: '#E6F0FF',
+  WarningStatus: '#FFF4E5',
 };
 
 export const Typography = {
   H1: {
     fontSize: 22,
-    fontWeight: '700' as const,
+    fontFamily: 'Inter_700Bold',
     lineHeight: 28,
   },
   H2: {
     fontSize: 18,
-    fontWeight: '600' as const,
+    fontFamily: 'Inter_600SemiBold',
     lineHeight: 24,
   },
   Body: {
     fontSize: 16,
-    fontWeight: '400' as const,
+    fontFamily: 'Inter_400Regular',
     lineHeight: 24,
   },
   BodySmall: {
     fontSize: 14,
-    fontWeight: '400' as const,
+    fontFamily: 'Inter_400Regular',
     lineHeight: 20,
   },
   Caption: {
     fontSize: 12,
-    fontWeight: '400' as const,
+    fontFamily: 'Inter_400Regular',
     lineHeight: 16,
+  },
+  // Additional typography sizes for startMeasurement
+  HeaderTitle: {
+    fontSize: 16,
+    fontFamily: 'Inter_600SemiBold',
+    lineHeight: 20,
+  },
+  SectionTitle: {
+    fontSize: 14,
+    fontFamily: 'Inter_600SemiBold',
+    lineHeight: 18,
+  },
+  CardTitle: {
+    fontSize: 15,
+    fontFamily: 'Inter_600SemiBold',
+    lineHeight: 20,
+  },
+  ButtonText: {
+    fontSize: 16,
+    fontFamily: 'Inter_600SemiBold',
+    lineHeight: 20,
   },
 };
 

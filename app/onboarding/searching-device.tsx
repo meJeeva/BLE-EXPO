@@ -206,7 +206,6 @@ const styles = StyleSheet.create({
 
   tipsTitle: {
     ...Typography.BodySmall,
-    fontWeight: "600",
     color: Colors.TextPrimary,
     marginBottom: Spacing.xs,
   },
@@ -236,6 +235,5 @@ const styles = StyleSheet.create({
   buttonText: {
     ...Typography.Body,
     color: Colors.TextWhite,
-    fontWeight: "600",
   },
 });

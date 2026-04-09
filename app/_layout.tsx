@@ -5,11 +5,27 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as ScreenCapture from 'expo-screen-capture';
 import { useAuthStore } from '../src/store/authStore';
 import { Colors } from '../src/constants/theme';
+import {
+  useFonts,
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  Inter_700Bold,
+} from '@expo-google-fonts/inter';
+import { ActivityIndicator, View } from 'react-native';
 
 export default function RootLayout() {
   const { initialize } = useAuthStore();
 
-  console.log('initialize', initialize)
+   const [fontsLoaded] = useFonts({
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
+  });
+
+
+
 
   useEffect(() => {
     initialize();
@@ -17,14 +33,21 @@ export default function RootLayout() {
     const enableScreenshotBlocking = async () => {
       try {
         // await ScreenCapture.preventScreenCaptureAsync();
-        console.log('Screenshot blocking enabled globally');
       } catch (error) {
-        console.error('Error enabling screenshot blocking:', error);
       }
     };
 
     // enableScreenshotBlocking();
   }, []);
+
+    if (!fontsLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -46,7 +69,7 @@ export default function RootLayout() {
           <Stack.Screen name="mode-selection" options={{ headerShown: false }} />
           <Stack.Screen name="login" options={{ headerShown: false }} />
           <Stack.Screen name="otp" options={{ headerShown: false }} />
-          <Stack.Screen name="createUser" options={{ headerShown: false }} />
+          <Stack.Screen name="createUser" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }}/>
           <Stack.Screen name="onboarding/device-detect" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />
           <Stack.Screen name="onboarding/enable-bluetooth" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />
           <Stack.Screen name="onboarding/searching-device" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />

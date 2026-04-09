@@ -102,7 +102,6 @@ const styles = StyleSheet.create({
     color: Colors.TextPrimary,
     marginBottom: Spacing.md,
     marginTop: Spacing.xs,
-    fontWeight: '600'
   },
 
   row: {
@@ -127,11 +126,10 @@ const styles = StyleSheet.create({
   rowValue: {
     ...Typography.BodySmall,
     color: Colors.TextPrimary,
-    fontWeight: '600'
   },
 
   banner: {
-    backgroundColor: '#E6F9ED',
+    backgroundColor: Colors.BannerBg,
     padding: Spacing.md,
     borderRadius: BorderRadius.md,
     marginTop: Spacing.lg,
@@ -140,7 +138,6 @@ const styles = StyleSheet.create({
   bannerText: {
     ...Typography.BodySmall,
     color: Colors.Secondary,
-    fontWeight: '500'
   },
 
   button: {

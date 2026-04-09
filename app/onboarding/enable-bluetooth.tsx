@@ -157,6 +157,5 @@ const styles = StyleSheet.create({
   buttonText: {
     ...Typography.Body,
     color: Colors.TextWhite,
-    fontWeight: "600",
   },
 });

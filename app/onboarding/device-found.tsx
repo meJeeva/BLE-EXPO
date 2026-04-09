@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: "#E6F7EE", // soft green bg
+    backgroundColor: Colors.SuccessBg, 
     justifyContent: "center",
     alignItems: "center",
     marginBottom: Spacing.md,
@@ -150,7 +150,6 @@ const styles = StyleSheet.create({
 
   deviceName: {
     ...Typography.Body,
-    fontWeight: "600",
     color: Colors.TextPrimary,
   },
 
@@ -168,7 +167,6 @@ const styles = StyleSheet.create({
     ...Typography.Caption,
     color: Colors.Secondary,
     marginLeft: 4,
-    fontWeight: "600",
   },
 
   infoBox: {
@@ -202,6 +200,5 @@ const styles = StyleSheet.create({
   buttonText: {
     ...Typography.Body,
     color: Colors.TextWhite,
-    fontWeight: "600",
   },
 });

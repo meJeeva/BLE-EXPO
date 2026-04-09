@@ -296,7 +296,6 @@ const styles = StyleSheet.create({
     ...Typography.BodySmall,
     color: Colors.TextPrimary,
     marginBottom: Spacing.xs,
-    fontWeight: '500',
   },
 
   inputBox: {
@@ -349,8 +348,8 @@ const styles = StyleSheet.create({
   },
 
   genderTextActive: {
+    ...Typography.Body,
     color: Colors.Primary,
-    fontWeight: '600',
   },
 
   primaryBtn: {
@@ -362,9 +361,8 @@ const styles = StyleSheet.create({
   },
 
   primaryText: {
+    ...Typography.Body,
     color: Colors.TextWhite,
-    fontWeight: '600',
-    fontSize: 16,
   },
 
   secondaryBtn: {
@@ -376,8 +374,8 @@ const styles = StyleSheet.create({
   },
 
   secondaryText: {
+    ...Typography.Body,
     color: Colors.TextSecondary,
-    fontWeight: '500',
   },
   dropdownContainer: {
     marginBottom: Spacing.md,
@@ -407,7 +405,7 @@ const styles = StyleSheet.create({
     top: '100%',
     left: 0,
     right: 0,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.DropdownBg,
     borderRadius: 12,
     borderWidth: 1,
     borderColor: Colors.Border,

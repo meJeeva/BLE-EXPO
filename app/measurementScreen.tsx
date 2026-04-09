@@ -3,12 +3,12 @@ import {
     View,
     Text,
     StyleSheet,
-    SafeAreaView,
     FlatList,
     TouchableOpacity,
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Colors } from '@/src/constants/theme';
+import { LineChart } from 'react-native-gifted-charts';
+import { Colors, Typography } from '@/src/constants/theme';
 
 
 const vitals = [
@@ -19,6 +19,7 @@ const vitals = [
         unit: 'bpm',
         color: '#E53935',
         icon: 'heart',
+        data: [70, 72, 75, 73, 72, 71, 74, 73, 72, 71],
     },
     {
         id: '2',
@@ -27,6 +28,7 @@ const vitals = [
         unit: 'ms',
         color: '#7C4DFF',
         icon: 'heart',
+        data: [50, 55, 53, 58, 54, 55, 56, 54, 53, 55],
     },
     {
         id: '3',
@@ -35,14 +37,16 @@ const vitals = [
         unit: 'breaths/min',
         color: '#2563EB',
         icon: 'waveform',
+        data: [16, 17, 18, 19, 18, 18, 17, 19, 18, 18],
     },
     {
         id: '4',
-        title: 'Blood Oxygen (SpO₂)',
+        title: 'Blood Oxygen (SpO2)',
         value: '98',
         unit: '%',
         color: '#27AE60',
         icon: 'water',
+        data: [97, 98, 99, 98, 97, 98, 99, 98, 97, 98],
     },
     {
         id: '5',
@@ -51,23 +55,72 @@ const vitals = [
         unit: '°C',
         color: '#F59E0B',
         icon: 'thermometer',
+        data: [36.5, 36.7, 36.8, 36.9, 36.8, 36.8, 36.7, 36.9, 36.8, 36.8],
     },
 ];
 
-const VitalCard = ({ item }: any) => {
+
+const VitalCard = ({ item, tempUnit, onTempUnitChange, viewMode }: any) => {
+    const convertTemp = (celsius: string, unit: 'C' | 'F') => {
+        const temp = parseFloat(celsius);
+        if (unit === 'F') {
+            return ((temp * 9/5) + 32).toFixed(1);
+        }
+        return celsius;
+    };
+
+    const getTempUnit = (unit: 'C' | 'F') => {
+        return unit === 'F' ? '°F' : '°C';
+    };
+
+    const chartData = item.data.map((value: number, index: number) => ({
+        value:
+            item.title === 'Temperature'
+                ? tempUnit === 'F'
+                    ? (value * 9/5) + 32
+                    : value
+                : value,
+        label: index === 0 ? '0s' : index === item.data.length - 1 ? '9s' : `${index}s`,
+    }));
+
     return (
         <View style={styles.card}>
             <View style={{ flex: 1 }}>
-                <Text style={styles.cardTitle}>{item.title}</Text>
+                <Text style={styles.cardTitle}>{item.title} {viewMode === 'chart' ? `(${item.title === 'Temperature' ? getTempUnit(tempUnit) : item.unit})` : ''}</Text>
 
-                <View style={styles.valueRow}>
-                    <Text style={[styles.value, { color: item.color }]}>
-                        {item.value}
-                    </Text>
-                    <Text style={styles.unit}> {item.unit}</Text>
-                </View>
+                {viewMode === 'cards' ? (
+                    <View style={styles.valueRow}>
+                        <Text style={[styles.value, { color: item.color }]}>
+                            {item.title === 'Temperature' ? convertTemp(item.value, tempUnit) : item.data[item.data.length - 1]}
+                        </Text>
+                        <Text style={styles.unit}> 
+                            {item.title === 'Temperature' ? getTempUnit(tempUnit) : item.unit}
+                        </Text>
+                    </View>
+                ) : (
+                    <LineChart
+                        data={chartData}
+                        height={100}
+                        width={225}
+                        color={item.color}
+                        thickness={2}
+                        hideDataPoints
+                        isAnimated
+                        curved
+                                        yAxisTextStyle={{ ...Typography.Caption, color: Colors.TextSecondary }}
+                        xAxisLabelTextStyle={{ ...Typography.Caption, color: Colors.TextSecondary }}
+                        xAxisColor={Colors.TextSecondary}
+                        yAxisColor={Colors.TextSecondary}
+                        rulesColor={Colors.TextSecondary}
+                        rulesType="solid"
+                        noOfSections={4}
+                        initialSpacing={10}
+                        endSpacing={10}
+                        spacing={30}
+                    />
+                )}
 
-                <Text style={styles.status}>→ Normal</Text>
+                <Text style={styles.status}>Normal</Text>
             </View>
 
             <View style={styles.iconWrapper}>
@@ -86,6 +139,23 @@ const VitalCard = ({ item }: any) => {
                 )}
                 {item.icon === 'waveform' && (
                     <Ionicons name="pulse" size={20} color={Colors.Info} />
+                )}
+
+                {item.title === 'Temperature' && (
+                    <View style={styles.tempUnitToggle}>
+                        <TouchableOpacity
+                            style={tempUnit === 'C' ? styles.tempUnitActive : styles.tempUnitInactive}
+                            onPress={() => onTempUnitChange('C')}
+                        >
+                            <Text style={tempUnit === 'C' ? styles.tempUnitActiveText : styles.tempUnitInactiveText}>°C</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={tempUnit === 'F' ? styles.tempUnitActive : styles.tempUnitInactive}
+                            onPress={() => onTempUnitChange('F')}
+                        >
+                            <Text style={tempUnit === 'F' ? styles.tempUnitActiveText : styles.tempUnitInactiveText}>°F</Text>
+                        </TouchableOpacity>
+                    </View>
                 )}
             </View>
         </View>
@@ -126,20 +196,6 @@ export default function MeasurementScreen() {
                         <Text style={styles.liveText}>Live</Text>
                     </View>
 
-                    <View style={styles.tempToggle}>
-                        <TouchableOpacity
-                            style={tempUnit === 'C' ? styles.toggleActive : styles.toggleInactive}
-                            onPress={() => setTempUnit('C')}
-                        >
-                            <Text style={tempUnit === 'C' ? styles.toggleActiveText : styles.toggleInactiveText}>°C</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={tempUnit === 'F' ? styles.toggleActive : styles.toggleInactive}
-                            onPress={() => setTempUnit('F')}
-                        >
-                            <Text style={tempUnit === 'F' ? styles.toggleActiveText : styles.toggleInactiveText}>°F</Text>
-                        </TouchableOpacity>
-                    </View>
 
                     <View style={styles.toggle}>
                         <TouchableOpacity
@@ -165,7 +221,7 @@ export default function MeasurementScreen() {
             <FlatList
                 data={vitals}
                 keyExtractor={(item) => item.id}
-                renderItem={({ item }) => <VitalCard item={item} />}
+                renderItem={({ item }) => <VitalCard item={item} tempUnit={tempUnit} onTempUnitChange={setTempUnit} viewMode={viewMode} />}
                 contentContainerStyle={{ padding: 16, paddingBottom: 120 }}
                 showsVerticalScrollIndicator={false}
             />
@@ -205,13 +261,12 @@ const styles = StyleSheet.create({
     },
 
     name: {
-        fontSize: 15,
-        fontWeight: '600',
+        ...Typography.CardTitle,
         color: Colors.TextPrimary,
     },
 
     device: {
-        fontSize: 12,
+        ...Typography.Caption,
         color: Colors.TextSecondary,
     },
 
@@ -230,7 +285,7 @@ const styles = StyleSheet.create({
     },
 
     batteryText: {
-        fontSize: 12,
+        ...Typography.Caption,
         color: Colors.TextSecondary,
     },
 
@@ -260,9 +315,8 @@ const styles = StyleSheet.create({
     },
 
     liveText: {
-        fontSize: 12,
+        ...Typography.Caption,
         color: Colors.Secondary,
-        fontWeight: '500',
     },
 
     toggle: {
@@ -277,28 +331,25 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 4,
         borderRadius: 8,
-        fontSize: 12,
+        ...Typography.Caption,
         color: Colors.Primary,
-        fontWeight: '600',
     },
 
     toggleInactive: {
         paddingHorizontal: 10,
         paddingVertical: 4,
-        fontSize: 12,
+        ...Typography.Caption,
         color: Colors.TextSecondary,
     },
 
     toggleActiveText: {
-        fontSize: 12,
+        ...Typography.Caption,
         color: Colors.Primary,
-        fontWeight: '600',
     },
 
     toggleInactiveText: {
-        fontSize: 12,
+        ...Typography.Caption,
         color: Colors.TextSecondary,
-        fontWeight: '600',
     },
 
     tempToggle: {
@@ -323,38 +374,36 @@ const styles = StyleSheet.create({
     },
 
     cardTitle: {
-        fontSize: 13,
-        color: Colors.TextSecondary,
-        marginBottom: 6,
-        fontWeight: '600'
+        ...Typography.Caption,
+        color: Colors.TextPrimary,
+        marginBottom: 16,
     },
 
     valueRow: {
         flexDirection: 'row',
         alignItems: 'flex-end',
+        gap: 4,
     },
 
     value: {
-        fontSize: 24,
-        fontWeight: '700',
+        ...Typography.H1,
     },
 
     unit: {
-        fontSize: 13,
+        ...Typography.Caption,
         color: Colors.TextSecondary,
         marginBottom: 2,
-        fontWeight: '500'
     },
 
     status: {
-        fontSize: 12,
+        ...Typography.Caption,
         color: Colors.TextSecondary,
         marginTop: 6,
-        fontWeight: '500'
     },
 
     iconWrapper: {
         justifyContent: 'flex-start',
+        alignItems: 'flex-end',
     },
 
     button: {
@@ -369,8 +418,37 @@ const styles = StyleSheet.create({
     },
 
     buttonText: {
-        color: '#fff',
-        fontWeight: '600',
-        fontSize: 16,
+        ...Typography.ButtonText,
+        color: Colors.TextWhite,
+    },
+
+    tempUnitToggle: {
+        flexDirection: 'row',
+        backgroundColor: '#F1F5F9',
+        borderRadius: 8,
+        padding: 2,
+        marginTop: 8,
+    },
+
+    tempUnitActive: {
+        backgroundColor: Colors.Surface,
+        paddingHorizontal: 8,
+        paddingVertical: 2,
+        borderRadius: 6,
+    },
+
+    tempUnitInactive: {
+        paddingHorizontal: 8,
+        paddingVertical: 2,
+    },
+
+    tempUnitActiveText: {
+        ...Typography.Caption,
+        color: Colors.Primary,
+    },
+
+    tempUnitInactiveText: {
+        ...Typography.Caption,
+        color: Colors.TextSecondary,
     },
 });
