@@ -10,9 +10,9 @@ import { Feather } from '@expo/vector-icons';
 import { Colors, Typography, Spacing, BorderRadius } from './../../src/constants/theme';
 
 const CONTACT_OPTIONS = [
-  { id: '1', label: 'Call Support',   sub: 'Available 24/7',        icon: 'phone'         },
-  { id: '2', label: 'Live Chat',      sub: 'Response within 5 min', icon: 'message-circle'},
-  { id: '3', label: 'Email Support',  sub: 'support@vitalz.com',    icon: 'mail'          },
+  { id: '1', label: 'Call Support', sub: 'Available 24/7', icon: 'phone' },
+  { id: '2', label: 'Live Chat', sub: 'Response within 5 min', icon: 'message-circle' },
+  { id: '3', label: 'Email Support', sub: 'support@vitalz.com', icon: 'mail' },
 ] as const;
 
 const FAQ_SECTIONS = [
@@ -68,8 +68,11 @@ const ContactItem = ({
     activeOpacity={0.7}
   >
     <View style={styles.contactLeft}>
-      <View style={styles.iconBox}>
-        <Feather name={icon} size={15} color={Colors.TextSecondary} />
+      <View style={[styles.iconBox, {
+        borderRadius: 99,
+        borderWidth: 0,
+      }]}>
+        <Feather name={icon} size={15} color={Colors.TextWhite} />
       </View>
       <View>
         <Text style={styles.contactName}>{label}</Text>
@@ -91,8 +94,11 @@ const FaqSection = ({
 }) => (
   <View style={styles.card}>
     <View style={styles.faqHeader}>
-      <View style={styles.iconBox}>
-        <Feather name={icon} size={15} color={Colors.TextSecondary} />
+      <View style={[styles.iconBox, {
+        borderWidth: 0,
+        backgroundColor: Colors.Background
+      }]}>
+        <Feather name={icon} size={15} color={Colors.Primary} />
       </View>
       <Text style={styles.faqTitle}>{title}</Text>
     </View>
@@ -131,7 +137,7 @@ export default function Help() {
               sub={opt.sub}
               icon={opt.icon}
               isLast={index === CONTACT_OPTIONS.length - 1}
-              onPress={() => {}}
+              onPress={() => { }}
             />
           ))}
         </View>
@@ -204,13 +210,14 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.Border,
   },
   iconBox: {
-    width: 32,
-    height: 32,
-    borderRadius: BorderRadius.md,
+    width: 38,
+    height: 38,
+    borderRadius: BorderRadius.lg,
     borderWidth: 1,
-    borderColor: Colors.Border,
+    borderColor: Colors.Primary,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: Colors.primaryBackground
   },
   sectionLabel: {
     ...Typography.Caption,

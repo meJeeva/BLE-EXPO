@@ -10,49 +10,9 @@ export default function Index() {
   const { isAuthenticated, isLoading, bootstrapData, appMode } = useAuthStore();
 
   useEffect(() => {
-    console.log('isloading',isLoading)
-    if (isLoading) return;
-
-    console.log('app mode', appMode);
-
-    // First check: Is mode selected?
-    if (!appMode) {
-      router.replace('/mode-selection');
-      return;
-    }
-
-    // Second check: Is user authenticated?
-    if (!isAuthenticated) {
-      if (appMode === 'HOME') {
-        router.replace('/login');
-      } else {
-        router.replace('/hospital-mode');
-      }
-      return;
-    }
-
-    // Third check: For HOME mode, check bootstrap and route accordingly
-    if (appMode === 'HOME') {
-      console.log('bootstrapData',bootstrapData)
-      console.log('appMode',appMode)
-      if (bootstrapData) {
-        const { onboardingState } = bootstrapData;
-
-        if (!onboardingState.hasHousehold) {
-          router.replace('/onboarding/household');
-        } else if (!onboardingState.hasAnyPatient) {
-          router.replace('/onboarding/add-patient');
-        } else if (!onboardingState.hasClaimedDevice) {
-          router.replace('/onboarding/device-onboarding');
-        } else {
-          router.replace('/(tabs)/dashboard');
-        }
-      }
-    } else {
-      // HOSPITAL mode - go to placeholder
-      router.replace('/hospital-mode');
-    }
-  }, [isAuthenticated, isLoading, bootstrapData, appMode]);
+    // Always navigate to home screen
+    router.replace('/mode-selection');
+  }, []);
 
   return (
     <View style={styles.container}>

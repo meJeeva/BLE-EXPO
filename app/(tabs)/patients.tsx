@@ -1,592 +1,371 @@
+import { BorderRadius, Colors, Spacing } from '@/src/constants/theme';
 import React, { useState } from 'react';
 import {
     View,
     Text,
-    StyleSheet,
-    FlatList,
+    TextInput,
     TouchableOpacity,
     ScrollView,
+    StyleSheet,
+    StatusBar,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { LineChart } from 'react-native-gifted-charts';
-import { Colors, Typography, Spacing, BorderRadius } from '@/src/constants/theme';
 
-const vitals = [
-    {
-        id: '1',
-        title: 'Heart Rate',
-        unit: 'bpm',
-        color: Colors.Error,
-        icon: 'heart',
-        data: [70, 72, 75, 73, 72, 71, 74, 73, 72, 71],
-    },
-    {
-        id: '2',
-        title: 'HRV',
-        unit: 'ms',
-        color: '#7C4DFF',
-        icon: 'chart',
-        data: [40, 45, 50, 48, 46, 45],
-    },
-    {
-        id: '3',
-        title: 'SpO2',
-        unit: '%',
-        color: Colors.Secondary,
-        icon: 'water',
-        data: [97, 98, 99, 98, 97, 98],
-    },
-    {
-        id: '4',
-        title: 'Respiratory Rate',
-        unit: 'br/min',
-        color: Colors.Info,
-        icon: 'waveform',
-        data: [14, 15, 16, 17, 16, 16],
-    },
-    {
-        id: '5',
-        title: 'Temperature',
-        unit: '°C',
-        color: Colors.Warning,
-        icon: 'thermometer',
-        data: [36.5, 36.7, 36.8, 36.9, 36.8, 36.8],
-    },
+// ─── Types ────────────────────────────────────────────────────────────────────
+type BadgeType = 'alert' | 'new' | null;
+
+interface Patient {
+    id: string;
+    name: string;
+    age: number;
+    lastSession: string;
+    badge: BadgeType;
+}
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
+const PATIENTS: Patient[] = [
+    { id: '1', name: 'John Smith', age: 45, lastSession: '2 hours ago', badge: null },
+    { id: '2', name: 'Sarah Williams', age: 62, lastSession: '1 day ago', badge: 'alert' },
+    { id: '3', name: 'Michael Brown', age: 38, lastSession: '3 days ago', badge: null },
+    { id: '4', name: 'Emily Davis', age: 55, lastSession: 'Never', badge: 'new' },
 ];
 
-export default function Patients() {
-    const [selected, setSelected] = useState(vitals[0]);
-    const [range, setRange] = useState('24h');
-    const [tempUnit, setTempUnit] = useState<'C' | 'F'>('C');
+// ─── Sub-components ───────────────────────────────────────────────────────────
 
-    const convertTemp = (celsius: number, unit: 'C' | 'F') => {
-        if (unit === 'F') {
-            return ((celsius * 9 / 5) + 32).toFixed(1);
-        }
-        return celsius.toFixed(1);
-    };
+/** Circular user avatar with blue tint */
+const Avatar = () => (
+    <View style={styles.avatarWrapper}>
+        {/* Head */}
+        <View style={styles.avatarHead} />
+        {/* Shoulders */}
+        <View style={styles.avatarShoulder} />
+    </View>
+);
 
-    const getTempUnit = (unit: 'C' | 'F') => {
-        return unit === 'F' ? '°F' : '°C';
-    };
+/** Alert / New badge pill */
+const Badge = ({ type }: { type: BadgeType }) => {
+    if (!type) return null;
+    const isAlert = type === 'alert';
+    return (
+        <View style={[styles.badge, isAlert ? styles.badgeAlert : styles.badgeNew]}>
+            <Text style={[styles.badgeText, isAlert ? styles.badgeTextAlert : styles.badgeTextNew]}>
+                {isAlert ? 'Alert' : 'New'}
+            </Text>
+        </View>
+    );
+};
 
-    const getChartData = (vital: typeof vitals[0]) => {
-        return vital.data.map((value: number, index: number) => ({
-            value:
-                vital.title === 'Temperature'
-                    ? tempUnit === 'F'
-                        ? (value * 9 / 5) + 32
-                        : value
-                    : value,
-            label: index === 0 ? '0s' : index === vital.data.length - 1 ? '5s' : `${index}s`,
-        }));
-    };
+/** Single patient row card */
+const PatientCard = ({ patient }: { patient: Patient }) => (
+    <TouchableOpacity style={styles.card} activeOpacity={0.75}>
+        <Avatar />
+        <View style={styles.cardBody}>
+            <View style={styles.cardTitleRow}>
+                <Text style={styles.cardName}>{patient.name}</Text>
+                <Badge type={patient.badge} />
+            </View>
+            <Text style={styles.cardAge}>{patient.age} years old</Text>
+            <View style={styles.cardSessionRow}>
+                {/* Clock icon (simple circle + hands) */}
+                <ClockIcon />
+                <Text style={styles.cardSession}>Last session: {patient.lastSession}</Text>
+            </View>
+        </View>
+    </TouchableOpacity>
+);
+
+/** Minimal SVG-style clock drawn with Views */
+const ClockIcon = () => (
+    <View style={styles.clockCircle}>
+        <View style={styles.clockHourHand} />
+        <View style={styles.clockMinuteHand} />
+    </View>
+);
+
+// ─── Screen ───────────────────────────────────────────────────────────────────
+export default function PatientsScreen() {
+    const [query, setQuery] = useState('');
+
+    const filtered = PATIENTS.filter(p =>
+        p.name.toLowerCase().includes(query.toLowerCase())
+    );
 
     return (
-        <View style={styles.container}>
-            <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.safe}>
+            <StatusBar barStyle="dark-content" backgroundColor={Colors.Background} />
 
-                {/* HEADER CARD */}
-                <View style={styles.headerCard}>
-                    <View>
-                        <Text style={styles.name}>Sarah Mitchell</Text>
-                        <Text style={styles.device}>Device: VZ-2847</Text>
-                    </View>
-
-                    <View style={styles.badge}>
-                        <View style={styles.dot} />
-                        <Text style={styles.badgeText}>Stable</Text>
-                    </View>
-                </View>
-
-                <Text style={styles.sectionTitle}>Key Vitals</Text>
-
-                <View>
-                    <FlatList
-                        data={vitals}
-                        numColumns={2}
-                        keyExtractor={(item) => item.id}
-                        columnWrapperStyle={{ justifyContent: 'space-between' }}
-                        renderItem={({ item, index }) => (
-                            <VitalCard
-                                item={item}
-                                onPress={() => setSelected(item)}
-                                isLast={index === vitals.length - 1}
-                            />
-                        )}
-                        contentContainerStyle={{ paddingHorizontal: 16 }}
+            <ScrollView
+                contentContainerStyle={styles.scrollContent}
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={false}
+            >
+                {/* Search */}
+                <View style={styles.searchWrapper}>
+                    <Ionicons name='search' size={20} />
+                    <TextInput
+                        style={styles.searchInput}
+                        placeholder="Search patients..."
+                        placeholderTextColor={Colors.InputIcon}
+                        value={query}
+                        onChangeText={setQuery}
+                        returnKeyType="search"
                     />
-
                 </View>
 
-                <View>
-                    <View style={[styles.filter, {}]}>
-                        {['24h', '7 days'].map((r) => (
-                            <TouchableOpacity
-                                key={r}
-                                onPress={() => setRange(r)}
-                                style={[styles.filterBtn, range === r && styles.filterActive]}
-                            >
-                                <Text style={range === r ? styles.filterTextActive : styles.filterText}>
-                                    {r}
-                                </Text>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
+                {/* Add New Patient */}
+                <TouchableOpacity style={styles.addButton} activeOpacity={0.85}>
+                    <Text style={styles.addButtonText}>＋  Add New Patient</Text>
+                </TouchableOpacity>
 
-                    {/* Heart Rate Chart */}
-                    <View style={styles.chartCard}>
-                        <View style={styles.chartHeader}>
-                            <Text style={styles.chartTitle}>Heart Rate (bpm)</Text>
-                        </View>
-                        <LineChart
-                            data={getChartData(vitals[0])}
-                            height={140}
-                            width={225}
-                            spacing={30}
-                            thickness={2}
-                            color={vitals[0].color}
-                            hideDataPoints
-                            isAnimated
-                            curved
-                            yAxisTextStyle={{ ...Typography.Caption, color: Colors.TextSecondary }}
-                            xAxisLabelTextStyle={{ ...Typography.Caption, color: Colors.TextSecondary }}
-                            xAxisColor={Colors.TextSecondary}
-                            yAxisColor={Colors.TextSecondary}
-                            rulesColor={Colors.TextSecondary}
-                            rulesType="solid"
-                            noOfSections={4}
-                            initialSpacing={10}
-                            endSpacing={10}
-                        />
-                    </View>
-
-                    {/* SpO2 Chart */}
-                    <View style={styles.chartCard}>
-                        <View style={styles.chartHeader}>
-                            <Text style={styles.chartTitle}>SpO2 (%)</Text>
-                        </View>
-                        <LineChart
-                            data={getChartData(vitals[2])}
-                            height={140}
-                            width={225}
-                            spacing={30}
-                            thickness={2}
-                            color={vitals[2].color}
-                            hideDataPoints
-                            isAnimated
-                            curved
-                            yAxisTextStyle={{ ...Typography.Caption, color: Colors.TextSecondary }}
-                            xAxisLabelTextStyle={{ ...Typography.Caption, color: Colors.TextSecondary }}
-                            xAxisColor={Colors.TextSecondary}
-                            yAxisColor={Colors.TextSecondary}
-                            rulesColor={Colors.TextSecondary}
-                            rulesType="solid"
-                            noOfSections={4}
-                            initialSpacing={10}
-                            endSpacing={10}
-                        />
-                    </View>
-
-                    {/* Temperature Chart */}
-                    <View style={styles.chartCard}>
-                        <View style={styles.chartHeader}>
-                            <Text style={styles.chartTitle}>Temperature ({getTempUnit(tempUnit)})</Text>
-                            <View style={styles.tempUnitToggle}>
-                                <TouchableOpacity
-                                    style={tempUnit === 'C' ? styles.tempUnitActive : styles.tempUnitInactive}
-                                    onPress={() => setTempUnit('C')}
-                                >
-                                    <Text style={tempUnit === 'C' ? styles.tempUnitActiveText : styles.tempUnitInactiveText}>°C</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={tempUnit === 'F' ? styles.tempUnitActive : styles.tempUnitInactive}
-                                    onPress={() => setTempUnit('F')}
-                                >
-                                    <Text style={tempUnit === 'F' ? styles.tempUnitActiveText : styles.tempUnitInactiveText}>°F</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                        <LineChart
-                            data={getChartData(vitals[4])}
-                            height={140}
-                            width={225}
-                            spacing={30}
-                            thickness={2}
-                            color={vitals[4].color}
-                            hideDataPoints
-                            isAnimated
-                            curved
-                            yAxisTextStyle={{ ...Typography.Caption, color: Colors.TextSecondary }}
-                            xAxisLabelTextStyle={{ ...Typography.Caption, color: Colors.TextSecondary }}
-                            xAxisColor={Colors.TextSecondary}
-                            yAxisColor={Colors.TextSecondary}
-                            rulesColor={Colors.TextSecondary}
-                            rulesType="solid"
-                            noOfSections={4}
-                            initialSpacing={10}
-                            endSpacing={10}
-                        />
-                    </View>
-                </View>
-                {/* RECENT ALERTS */}
-                <Text style={styles.sectionTitle}>Recent Alerts</Text>
-
-                <View style={styles.alertCard}>
-                    <View style={styles.alertRow}>
-                        <Ionicons name="warning-outline" size={16} color={Colors.Warning} />
-                        <Text style={[styles.alertText, { color: Colors.Warning }]}>
-                            SpO2 dropped below 94%
-                        </Text>
-                    </View>
-                    <Text style={styles.alertTime}>2 hours ago</Text>
-                </View>
-
-                <View style={styles.alertCardBlue}>
-                    <View style={styles.alertRow}>
-                        <Ionicons name="alert-circle-outline" size={16} color={Colors.Info} />
-                        <Text style={[styles.alertText, { color: Colors.Info }]}>
-                            Heart rate elevated for 10 minutes
-                        </Text>
-                    </View>
-                    <Text style={styles.alertTime}>5 hours ago</Text>
-                </View>
-
-                {/* DEVICE STATUS */}
-                <Text style={styles.sectionTitle}>Device Status</Text>
-
-                <View style={styles.deviceCard}>
-                    <View style={styles.deviceRow}>
-                        <View style={styles.deviceItem}>
-                            <Ionicons name="battery-full" size={18} color={Colors.TextSecondary} />
-                            <View style={{ marginLeft: 8 }}>
-                                <Text style={styles.deviceLabel}>Battery</Text>
-                                <Text style={styles.deviceValue}>87%</Text>
-                            </View>
-                        </View>
-
-                        <View style={styles.deviceItem}>
-                            <Ionicons name="wifi-outline" size={18} color={Colors.Secondary} />
-                            <View style={{ marginLeft: 8 }}>
-                                <Text style={styles.deviceLabel}>Connection</Text>
-                                <Text style={[styles.deviceValue, { color: Colors.Secondary }]}>
-                                    Connected
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
-                </View>
+                {/* Patient list */}
+                {filtered.map(patient => (
+                    <PatientCard key={patient.id} patient={patient} />
+                ))}
             </ScrollView>
         </View>
     );
 }
 
-const VitalCard = ({ item, onPress, isLast }: any) => {
-    const latest = item.data[item.data.length - 1];
+/** Search magnifier icon */
 
-    return (
-        <TouchableOpacity
-            onPress={onPress}
-            style={[
-                styles.card,
-                isLast && { width: '100%' },
-            ]}
-        >
-            <View style={styles.cardTop}>
-                <View style={styles.iconBox}>
-                    {item.icon === 'heart' && <Ionicons name="heart" size={14} color={Colors.Error} />}
-                    {item.icon === 'water' && <Ionicons name="water" size={14} color={Colors.Info} />}
-                    {item.icon === 'thermometer' && (
-                        <MaterialCommunityIcons name="thermometer" size={14} color={Colors.Warning} />
-                    )}
-                    {item.icon === 'waveform' && <Ionicons name="pulse" size={14} color={Colors.Info} />}
-                    {item.icon === 'chart' && <Ionicons name="bar-chart" size={14} color={Colors.Info} />}
-                </View>
-
-                <Ionicons name="remove" size={16} color={Colors.Border} />
-            </View>
-
-            <Text style={styles.label}>{item.title}</Text>
-
-            <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-                <Text style={styles.value}>{latest}</Text>
-                <Text style={styles.unit}> {item.unit}</Text>
-            </View>
-        </TouchableOpacity>
-    );
-};
-
+// ─── Styles ───────────────────────────────────────────────────────────────────
 const styles = StyleSheet.create({
-    container: {
+    safe: {
         flex: 1,
         backgroundColor: Colors.Background,
     },
 
-    headerCard: {
-        backgroundColor: Colors.Surface,
-        margin: 16,
-        padding: 16,
-        borderRadius: BorderRadius.lg,
+    // ── Header ──
+    header: {
         flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'space-between',
+        paddingHorizontal: Spacing.md,
+        paddingVertical: Spacing.sm + 4,
+        backgroundColor: Colors.Background,
+    },
+    backBtn: {
+        width: 32,
+        height: 32,
+        justifyContent: 'center',
         alignItems: 'center',
-
-        shadowColor: '#000',
-        shadowOpacity: 0.04,
-        shadowRadius: 6,
-        elevation: 2,
     },
-
-    name: {
-        ...Typography.CardTitle,
-        color: Colors.TextPrimary,
+    arrowLeft: {
+        width: 10,
+        height: 10,
+        borderLeftWidth: 2,
+        borderBottomWidth: 2,
+        borderColor: Colors.TextPrimary,
+        transform: [{ rotate: '45deg' }],
+        marginLeft: 4,
     },
-
-    device: {
-        ...Typography.Caption,
-        color: Colors.TextSecondary,
-        marginTop: 2,
-    },
-
-    badge: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#E9F7EF',
-        paddingHorizontal: 10,
-        paddingVertical: 4,
-        borderRadius: 20,
-    },
-
-    dot: {
-        width: 6,
-        height: 6,
-        backgroundColor: Colors.Secondary,
-        borderRadius: 3,
-        marginRight: 6,
-    },
-
-    badgeText: {
-        ...Typography.Caption,
-        color: Colors.Secondary,
-    },
-
-    sectionTitle: {
-        marginHorizontal: 16,
-        marginBottom: 8,
-        ...Typography.Caption,
+    headerTitle: {
+        fontSize: 16,
         fontWeight: '600',
         color: Colors.TextPrimary,
-        marginVertical:8,
-        marginTop:12
+        letterSpacing: 0.2,
     },
 
-    card: {
-        backgroundColor: Colors.Surface,
-        borderRadius: 12,
-        padding: 12,
-        width: '48%',
-        marginBottom: 12,
-        shadowColor: '#000',
-        shadowOpacity: 0.04,
-        shadowRadius: 6,
-        elevation: 2,
+    // ── Scroll ──
+    scrollContent: {
+        paddingHorizontal: Spacing.md,
+        paddingBottom: Spacing.xl,
+        gap: Spacing.sm + 4,
     },
 
-    cardTop: {
+    // ── Search ──
+    searchWrapper: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 6,
+        alignItems: 'center',
+        backgroundColor: Colors.Surface,
+        borderRadius: BorderRadius.md,
+        borderWidth: 1,
+        borderColor: Colors.InputBorder,
+        paddingHorizontal: Spacing.md,
+        height: 44,
+        marginTop: Spacing.md + 5,
+    },
+    searchInput: {
+        flex: 1,
+        fontSize: 14,
+        color: Colors.TextPrimary,
+        marginLeft: Spacing.sm,
+        paddingVertical: 0,
     },
 
-    iconBox: {
-        width: 24,
-        height: 24,
+    // Search icon
+    searchIconWrapper: {
+        width: 16,
+        height: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    searchCircle: {
+        width: 11,
+        height: 11,
         borderRadius: 6,
-        backgroundColor: '#F1F5F9',
+        borderWidth: 1.8,
+        borderColor: Colors.InputIcon,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+    },
+    searchHandle: {
+        width: 5,
+        height: 1.8,
+        backgroundColor: Colors.InputIcon,
+        position: 'absolute',
+        bottom: 1,
+        right: 0,
+        transform: [{ rotate: '45deg' }],
+    },
+
+    // ── Add Button ──
+    addButton: {
+        backgroundColor: Colors.Primary,
+        borderRadius: BorderRadius.md,
+        paddingVertical: Spacing.sm + 6,
         alignItems: 'center',
         justifyContent: 'center',
+        shadowColor: Colors.Primary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 6,
+        elevation: 4,
+    },
+    addButtonText: {
+        color: Colors.TextWhite,
+        fontSize: 15,
+        fontWeight: '600',
+        letterSpacing: 0.3,
     },
 
-    label: {
-        ...Typography.Caption,
-        color: Colors.TextSecondary,
-        marginBottom: 4,
-    },
-
-    value: {
-        ...Typography.H1,
-        color: Colors.TextPrimary,
-    },
-
-    unit: {
-        ...Typography.Caption,
-        color: Colors.TextSecondary,
-    },
-
-    filter: {
+    // ── Patient Card ──
+    card: {
         flexDirection: 'row',
-        marginLeft: 16,
-        marginTop: 4,
-        marginBottom: 8,
-    },
-
-    filterBtn: {
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 8,
+        alignItems: 'center',
         backgroundColor: Colors.Surface,
-        marginRight: 8,
+        borderRadius: BorderRadius.lg,
+        padding: Spacing.md,
+        shadowColor: Colors.shadowColor,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.06,
+        shadowRadius: 4,
+        elevation: 2,
         borderWidth: 1,
         borderColor: Colors.Border,
     },
+    cardBody: {
+        flex: 1,
+        marginLeft: Spacing.sm + 4,
+        gap: 2,
+    },
+    cardTitleRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: Spacing.sm,
+    },
+    cardName: {
+        fontSize: 15,
+        fontWeight: '600',
+        color: Colors.TextPrimary,
+    },
+    cardAge: {
+        fontSize: 13,
+        color: Colors.TextSecondary,
+        marginTop: 1,
+    },
+    cardSessionRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4,
+        marginTop: 2,
+    },
+    cardSession: {
+        fontSize: 12,
+        color: Colors.TextSecondary,
+    },
 
-    filterActive: {
+    // ── Avatar ──
+    avatarWrapper: {
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        backgroundColor: Colors.PrimaryLight,
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        overflow: 'hidden',
+    },
+    avatarHead: {
+        width: 18,
+        height: 18,
+        borderRadius: 9,
         backgroundColor: Colors.Primary,
+        position: 'absolute',
+        top: 8,
+    },
+    avatarShoulder: {
+        width: 34,
+        height: 18,
+        borderRadius: 17,
+        backgroundColor: Colors.Primary,
+        marginBottom: -4,
     },
 
-    filterText: {
-        ...Typography.Caption,
-        color: Colors.TextPrimary,
-        fontWeight: '500'
-    },
-
-    filterTextActive: {
-        ...Typography.Caption,
-        color: Colors.TextWhite,
-        fontWeight: '600',
-    },
-
-    chartCard: {
-        backgroundColor: Colors.Surface,
-        marginHorizontal: 16,
-        borderRadius: 12,
-        padding: 16,
-        shadowColor: '#000',
-        shadowOpacity: 0.04,
-        shadowRadius: 6,
-        elevation: 2,
-        marginVertical: 10
-    },
-
-    chartTitle: {
-        ...Typography.Caption,
-        fontWeight: '600',
-        marginBottom: 10,
-        color: Colors.TextPrimary,
-    },
-
-    chartHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-
-    tempUnitToggle: {
-        flexDirection: 'row',
-        backgroundColor: '#F1F5F9',
-        borderRadius: 8,
-        padding: 2,
-    },
-
-    tempUnitActive: {
-        backgroundColor: Colors.Surface,
+    // ── Badge ──
+    badge: {
         paddingHorizontal: 8,
         paddingVertical: 2,
+        borderRadius: BorderRadius.sm + 2,
+    },
+    badgeAlert: {
+        backgroundColor: Colors.BadgeBg,
+    },
+    badgeNew: {
+        backgroundColor: Colors.SuccessBg,
+    },
+    badgeText: {
+        fontSize: 11,
+        fontWeight: '600',
+    },
+    badgeTextAlert: {
+        color: Colors.Error,
+    },
+    badgeTextNew: {
+        color: Colors.Secondary,
+    },
+
+    // ── Clock Icon ──
+    clockCircle: {
+        width: 11,
+        height: 11,
         borderRadius: 6,
-    },
-
-    tempUnitInactive: {
-        paddingHorizontal: 8,
-        paddingVertical: 2,
-    },
-
-    tempUnitActiveText: {
-        ...Typography.Caption,
-        color: Colors.Primary,
-        fontWeight: '600',
-    },
-
-    tempUnitInactiveText: {
-        ...Typography.Caption,
-        color: Colors.TextSecondary,
-        fontWeight: '600',
-    },
-    alertCard: {
-        backgroundColor: '#F5EDE3',
-        marginHorizontal: 16,
-        padding: 14,
-        borderRadius: 12,
-        marginBottom: 10,
-
-        shadowColor: '#000',
-        shadowOpacity: 0.04,
-        shadowRadius: 6,
-        elevation: 2,
-    },
-
-    alertCardBlue: {
-        backgroundColor: '#EAF2FF',
-        marginHorizontal: 16,
-        padding: 14,
-        borderRadius: 12,
-        marginBottom: 16,
-
-        shadowColor: '#000',
-        shadowOpacity: 0.04,
-        shadowRadius: 6,
-        elevation: 2,
-    },
-
-    alertRow: {
-        flexDirection: 'row',
+        borderWidth: 1.3,
+        borderColor: Colors.TextSecondary,
+        justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 4,
-        gap: 6,
+        position: 'relative',
     },
-
-    alertText: {
-        ...Typography.Caption,
-        fontWeight: '600',
+    clockHourHand: {
+        position: 'absolute',
+        width: 1.2,
+        height: 3.5,
+        backgroundColor: Colors.TextSecondary,
+        bottom: '50%',
+        left: '50%',
+        marginLeft: -0.6,
+        borderRadius: 1,
+        transformOrigin: 'bottom',
     },
-
-    alertTime: {
-        ...Typography.Caption,
-        color: Colors.TextPrimary,
-        marginLeft: 22,
-    },
-
-    deviceCard: {
-        backgroundColor: Colors.Surface,
-        marginHorizontal: 16,
-        borderRadius: 12,
-        padding: 16,
-
-        shadowColor: '#000',
-        shadowOpacity: 0.04,
-        shadowRadius: 6,
-        elevation: 2,
-        marginBottom: 30,
-    },
-
-    deviceRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-
-    deviceItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-
-    deviceLabel: {
-        ...Typography.Caption,
-        color: Colors.TextPrimary,
-        fontWeight: '600',
-    },
-
-    deviceValue: {
-        ...Typography.Caption,
-        color: Colors.TextSecondary,
+    clockMinuteHand: {
+        position: 'absolute',
+        width: 3,
+        height: 1.2,
+        backgroundColor: Colors.TextSecondary,
+        left: '50%',
+        top: '50%',
+        marginTop: -0.6,
+        borderRadius: 1,
     },
 });

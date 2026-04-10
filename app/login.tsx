@@ -251,7 +251,7 @@ export default function LoginLanding() {
             </View>
 
             <View style={styles.footer}>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.primaryButton}
                 onPress={() => {
                   router.navigate('/(tabs)/dashboard')
@@ -259,7 +259,7 @@ export default function LoginLanding() {
               >
                 <Ionicons name="call-outline" size={18} color={Colors.TextWhite} />
                 <Text style={styles.primaryText}>direct to dashboard</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity
                 style={styles.primaryButton}
                 onPress={() => setStep('phone')}

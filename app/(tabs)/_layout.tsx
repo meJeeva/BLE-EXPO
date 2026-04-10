@@ -2,16 +2,16 @@ import React from 'react';
 import { Drawer } from 'expo-router/drawer';
 import { usePathname, useRouter } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
-import { 
-  View, 
-  Text, 
-  Image, 
-  TouchableOpacity, 
-  StyleSheet, 
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
 } from 'react-native';
-import { 
-  DrawerContentScrollView, 
-  DrawerItemList 
+import {
+  DrawerContentScrollView,
+  DrawerItemList
 } from '@react-navigation/drawer';
 import { Colors, Typography, Spacing } from '../../src/constants/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -24,14 +24,14 @@ function CustomDrawerContent(props: any) {
       <View style={styles.drawerHeader}>
         <View style={styles.headerTop}>
           <View style={styles.logoAndName}>
-            <Image 
-              source={require('../../assets/images/logo.png')} 
-              style={styles.drawerLogo} 
+            <Image
+              source={require('../../assets/images/logo.png')}
+              style={styles.drawerLogo}
               resizeMode="contain"
             />
             <Text style={styles.appNameLabel}>VitalZ</Text>
           </View>
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={() => props.navigation.closeDrawer()}
             style={styles.closeBtn}
           >
@@ -49,13 +49,13 @@ function CustomDrawerContent(props: any) {
           </View>
         </View>
       </View>
-      
+
       <DrawerContentScrollView {...props} contentContainerStyle={{ paddingTop: 0 }}>
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
 
       <View style={styles.drawerFooter}>
-        <TouchableOpacity style={styles.logoutBtn}>
+        <TouchableOpacity style={styles.logoutBtn} onPress={() => router.replace('/mode-selection')}>
           <Feather name="log-out" size={18} color={Colors.Error} />
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
@@ -77,7 +77,6 @@ export default function TabLayout() {
         headerTitleStyle: {
           ...Typography.HeaderTitle,
           color: Colors.TextPrimary,
-          marginRight: 50,
         },
         headerStyle: {
           backgroundColor: Colors.Background,
@@ -85,62 +84,61 @@ export default function TabLayout() {
         drawerLabelStyle: {
           ...Typography.BodySmall,
           fontFamily: 'Inter_600SemiBold',
-          marginLeft: 5,
         },
         drawerActiveTintColor: Colors.Primary,
         drawerActiveBackgroundColor: Colors.PrimaryLight,
         drawerInactiveTintColor: Colors.TextPrimary,
       }}
     >
-      <Drawer.Screen 
-        name="dashboard" 
-        options={{ 
+      <Drawer.Screen
+        name="dashboard"
+        options={{
           title: 'Dashboard',
           drawerIcon: ({ color }: { color: string }) => <Feather name="grid" size={20} color={color} />
-        }} 
+        }}
       />
-      <Drawer.Screen 
-        name="patients" 
-        options={{ 
+      <Drawer.Screen
+        name="patients"
+        options={{
           title: 'Patients',
           drawerIcon: ({ color }: { color: string }) => <Feather name="users" size={20} color={color} />
-        }} 
+        }}
       />
-      <Drawer.Screen 
-        name="devices" 
-        options={{ 
+      {/* <Drawer.Screen
+        name="devices"
+        options={{
           title: 'Devices',
           drawerIcon: ({ color }: { color: string }) => <Feather name="bluetooth" size={20} color={color} />
-        }} 
+        }}
       />
-      <Drawer.Screen 
-        name="sessions" 
-        options={{ 
+      <Drawer.Screen
+        name="sessions"
+        options={{
           title: 'Sessions',
           drawerIcon: ({ color }: { color: string }) => <Feather name="activity" size={20} color={color} />
-        }} 
+        }}
       />
-      <Drawer.Screen 
-        name="alerts" 
-        options={{ 
+      <Drawer.Screen
+        name="alerts"
+        options={{
           title: 'Alerts',
           drawerIcon: ({ color }: { color: string }) => <Feather name="bell" size={20} color={color} />
-        }} 
+        }}
       />
-      <Drawer.Screen 
-        name="profile" 
-        options={{ 
+      <Drawer.Screen
+        name="profile"
+        options={{
           title: 'Profile',
           drawerIcon: ({ color }: { color: string }) => <Feather name="user" size={20} color={color} />
-        }} 
+        }}
       />
-      <Drawer.Screen 
-        name="help" 
-        options={{ 
+      <Drawer.Screen
+        name="help"
+        options={{
           title: 'Help & Support',
           drawerIcon: ({ color }: { color: string }) => <Feather name="help-circle" size={20} color={color} />
-        }} 
-      />
+        }}
+      /> */}
     </Drawer>
   );
 }
@@ -152,7 +150,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Surface,
     borderBottomWidth: 1,
     borderBottomColor: Colors.Border,
-    marginBottom:Spacing.md
+    marginBottom: Spacing.md
   },
   headerTop: {
     flexDirection: 'row',

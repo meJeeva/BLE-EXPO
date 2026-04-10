@@ -17,7 +17,7 @@ import { ActivityIndicator, View } from 'react-native';
 export default function RootLayout() {
   const { initialize } = useAuthStore();
 
-   const [fontsLoaded] = useFonts({
+  const [fontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_500Medium,
     Inter_600SemiBold,
@@ -40,7 +40,7 @@ export default function RootLayout() {
     // enableScreenshotBlocking();
   }, []);
 
-    if (!fontsLoaded) {
+  if (!fontsLoaded) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator />
@@ -69,7 +69,7 @@ export default function RootLayout() {
           <Stack.Screen name="mode-selection" options={{ headerShown: false }} />
           <Stack.Screen name="login" options={{ headerShown: false }} />
           <Stack.Screen name="otp" options={{ headerShown: false }} />
-          <Stack.Screen name="createUser" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }}/>
+          <Stack.Screen name="createUser" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />
           <Stack.Screen name="onboarding/device-detect" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />
           <Stack.Screen name="onboarding/enable-bluetooth" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />
           <Stack.Screen name="onboarding/searching-device" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />
@@ -84,9 +84,13 @@ export default function RootLayout() {
           <Stack.Screen name="patients/add" options={{ title: 'Add Family Member' }} />
           <Stack.Screen name="patients/edit" options={{ title: 'Edit Family Member' }} />
           <Stack.Screen name="session/[id]" options={{ title: 'Session Details' }} />
-          <Stack.Screen name="hospital-mode" options={{ title: 'Hospital Mode' }} />
           <Stack.Screen name="startMeasurement" options={{ headerTitle: 'Start Measurement', headerStyle: { backgroundColor: Colors.Background }, headerTitleAlign: 'center', headerTintColor: Colors.IconBlack }} />
           <Stack.Screen name="measurementScreen" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />
+
+          {/* <Stack.Screen name="hospital-mode" options={{ headerTitle: '', headerStyle: { backgroundColor: Colors.Background }, headerTintColor: Colors.IconBlack }} />
+          <Stack.Screen name="admin-dashboard" options={{ headerShown: false }} />
+          <Stack.Screen name="patient-list" options={{ headerShown: false }} />
+          <Stack.Screen name="patient-details" options={{ headerShown: false }} /> */}
         </Stack>
       </SafeAreaProvider>
     </GestureHandlerRootView>

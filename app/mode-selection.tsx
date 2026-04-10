@@ -30,7 +30,7 @@ export default function ModeSelection() {
       if (mode === 'HOME') {
         router.replace('/login');
       } else {
-        router.replace('/hospital-mode');
+        router.push('/');
       }
     } catch (error) {
       console.error('Error saving mode:', error);
