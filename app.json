@@ -4,7 +4,7 @@
     "slug": "vitalz-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/splash-icon.png",
     "scheme": "vitalz",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
@@ -18,8 +18,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/icon.png",
-        "backgroundColor": "#0E5CAD"
+        "foregroundImage": "./assets/images/icon.png"
       },
       "package": "com.vitalz.mobile",
       "permissions": [
@@ -44,8 +43,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/icon.png",
-          "imageWidth": 200,
+          "image": "./assets/images/splash.png",
           "resizeMode": "contain",
           "backgroundColor": "#0E5CAD"
         }

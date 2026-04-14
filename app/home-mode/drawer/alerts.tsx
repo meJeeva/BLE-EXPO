@@ -184,7 +184,8 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   alertTitle: {
-    ...Typography.BodySmall,
+    fontSize: 15,
+    fontFamily: 'Inter_600SemiBold',
     color: Colors.TextPrimary,
   },
   metaRow: {

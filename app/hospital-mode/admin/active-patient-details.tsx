@@ -426,11 +426,11 @@ const styles = StyleSheet.create({
     logoText: {
         color: Colors.TextWhite,
         fontSize: 16,
-        fontWeight: '700',
+        fontFamily: 'Inter_600SemiBold',
     },
     appBarTitle: {
         fontSize: 16,
-        fontWeight: '700',
+        fontFamily: 'Inter_600SemiBold',
         color: Colors.TextPrimary,
         lineHeight: 20,
     },
@@ -459,7 +459,7 @@ const styles = StyleSheet.create({
     logoutText: {
         color: Colors.Error,
         fontSize: 14,
-        fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold',
     },
 
     divider: {

@@ -422,11 +422,11 @@ const styles = StyleSheet.create({
     logoText: {
         color: Colors.TextWhite,
         fontSize: 13,
-        fontWeight: '700',
+        fontFamily: 'Inter_700Bold',
     },
     appBarTitle: {
         fontSize: 16,
-        fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold',
         color: Colors.TextPrimary,
     },
     appBarSubtitle: {
@@ -456,7 +456,7 @@ const styles = StyleSheet.create({
     logoutText: {
         color: Colors.Error,
         fontSize: 14,
-        fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold',
     },
     divider: {
         height: 1,
@@ -486,7 +486,7 @@ const styles = StyleSheet.create({
     },
     patientName: {
         fontSize: 18,
-        fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold',
         color: Colors.TextPrimary,
     },
 
@@ -527,13 +527,13 @@ const styles = StyleSheet.create({
     infoLabel: {
         fontSize: 11,
         color: Colors.TextSecondary,
-        fontWeight: '500',
+        fontFamily: 'Inter_600SemiBold',
         textTransform: 'uppercase',
         letterSpacing: 0.4,
     },
     infoValue: {
         fontSize: 14,
-        fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold',
         color: Colors.TextPrimary,
     },
     activeBadge: {
@@ -546,7 +546,7 @@ const styles = StyleSheet.create({
     activeBadgeText: {
         color: Colors.TextWhite,
         fontSize: 12,
-        fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold',
     },
 
     // Vitals Grid
@@ -576,20 +576,20 @@ const styles = StyleSheet.create({
     vitalLabel: {
         fontSize: 11,
         color: Colors.TextSecondary,
-        fontWeight: '500',
+        fontFamily: 'Inter_600SemiBold',
         textTransform: 'uppercase',
         letterSpacing: 0.4,
     },
     vitalValue: {
         fontSize: 28,
-        fontWeight: '700',
+        fontFamily: 'Inter_600SemiBold',
         color: Colors.TextPrimary,
         lineHeight: 34,
     },
     vitalUnit: {
         fontSize: 12,
         color: Colors.TextSecondary,
-        fontWeight: '400',
+        fontFamily: 'Inter_600SemiBold',
     },
 
     // Toggle
@@ -612,7 +612,7 @@ const styles = StyleSheet.create({
     },
     toggleText: {
         fontSize: 14,
-        fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold',
         color: Colors.TextSecondary,
     },
     toggleTextActive: {

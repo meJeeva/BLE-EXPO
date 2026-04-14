@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     ...Typography.BodySmall,
     color: Colors.TextPrimary,
     marginBottom: Spacing.xs,
-    fontWeight: '500',
+    fontFamily: 'Inter_600SemiBold',
   },
   input: {
     height: 48,

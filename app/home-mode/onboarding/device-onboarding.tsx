@@ -152,7 +152,7 @@ export default function DeviceOnboarding() {
           setShowScanner(false);
         }}>
           <Text style={[styles.manualEntryText, {
-            marginTop: Spacing.lg,
+            marginTop: Spacing.lg, fontFamily: 'Inter_600SemiBold'
           }]}><Text style={{ ...Typography.H1 }}>ⲧ  </Text> Enter device ID manually</Text>
         </TouchableOpacity>}
 

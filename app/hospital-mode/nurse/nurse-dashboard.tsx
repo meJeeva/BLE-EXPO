@@ -47,7 +47,7 @@ const NurseDashboard = () => {
                     <Text style={styles.sectionLabel}>Quick Actions</Text>
                     <View style={styles.quickActionsRow}>
                         <TouchableOpacity style={styles.quickActionBtn} onPress={() => {
-                            router.navigate('/nurse/create-patient')
+                            router.navigate('/hospital-mode/nurse/create-patient')
                         }}>
                             <View style={styles.quickActionIcon}>
                                 <Ionicons name="person-add-outline" size={22} color={Colors.Primary} />
@@ -56,7 +56,7 @@ const NurseDashboard = () => {
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.quickActionBtn} onPress={() => {
-                            router.navigate('/nurse/devices')
+                            router.navigate('/hospital-mode/nurse/devices')
                         }}>
                             <View style={styles.quickActionIcon}>
                                 <Ionicons name="wifi" size={24} color={Colors.Warning} />
@@ -65,7 +65,7 @@ const NurseDashboard = () => {
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.quickActionBtn} onPress={() => {
-                            router.navigate('/nurse/assign-devices')
+                            router.navigate('/hospital-mode/nurse/assign-devices')
                         }}>
                             <View style={styles.quickActionIcon}>
                                 <MaterialCommunityIcons name="link-variant" size={24} color={Colors.Secondary} />
@@ -120,7 +120,7 @@ const NurseDashboard = () => {
 
                 {/* View Patients */}
                 <TouchableOpacity style={styles.navCard} onPress={() => {
-                    router.navigate('/nurse/patient-list')
+                    router.navigate('/hospital-mode/nurse/patient-list')
                 }}>
                     <View>
                         <Text style={styles.navCardTitle}>View Patients</Text>
@@ -131,7 +131,7 @@ const NurseDashboard = () => {
 
                 {/* Active Alerts */}
                 <TouchableOpacity style={styles.navCard} onPress={() => {
-                    router.navigate('/nurse/alert-list')
+                    router.navigate('/hospital-mode/nurse/alert-list')
                 }}>
                     <View>
                         <Text style={styles.navCardTitle}>Active Alerts</Text>

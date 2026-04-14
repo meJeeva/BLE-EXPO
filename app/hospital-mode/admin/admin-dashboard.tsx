@@ -1,6 +1,5 @@
 import { BorderRadius, Colors, Spacing } from '@/src/constants/theme';
 import React, { useState } from 'react';
-import { Image } from 'react-native';
 import {
     View,
     Text,
@@ -139,7 +138,7 @@ export default function AdminDashboard() {
     const router = useRouter();
 
     const handlePatientClick = () => {
-        router.push('/patient-list');
+        router.push('/hospital-mode/admin/active-patient-list');
     };
 
     return (
@@ -160,7 +159,7 @@ export default function AdminDashboard() {
                             <StatCard
                                 key={s.id}
                                 {...s}
-                                onPress={s.id === '1' ? handlePatientClick : s.id === '3' ? () => router.push('/hospital/hospital-devices') : s.id === '4' ? () => router.push('/users') : undefined}
+                                onPress={s.id === '1' ? handlePatientClick : s.id === '3' ? () => router.push('/hospital-mode/admin/active-devices') : s.id === '4' ? () => router.push('/hospital-mode/admin/total-users') : undefined}
                             />
                         ))}
                     </View>
@@ -229,11 +228,11 @@ const styles = StyleSheet.create({
     logoText: {
         color: Colors.TextWhite,
         fontSize: 16,
-        fontWeight: '700',
+        fontFamily: 'Inter_600SemiBold',
     },
     appBarTitle: {
         fontSize: 16,
-        fontWeight: '700',
+        fontFamily: 'Inter_700Bold',
         color: Colors.TextPrimary,
         lineHeight: 20,
     },
@@ -260,7 +259,7 @@ const styles = StyleSheet.create({
         borderRadius: BorderRadius.md,
     },
     navLeft: { flexDirection: 'row', alignItems: 'center' },
-    navTitle: { fontSize: 15, fontWeight: '700', color: Colors.TextPrimary },
+    navTitle: { fontSize: 15, fontFamily: 'Inter_600SemiBold', color: Colors.TextPrimary },
     navSub: { fontSize: 11, color: Colors.TextSecondary, marginTop: 1 },
     navRight: { flexDirection: 'row', alignItems: 'center' },
     logoutBtn: {
@@ -270,7 +269,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: Spacing.sm + 4,
         paddingVertical: 5,
     },
-    logoutText: { fontSize: 13, fontWeight: '600', color: Colors.Error },
+    logoutText: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.Error },
 
     logoSmall: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
     logoSmallOuter: {
@@ -294,7 +293,7 @@ const styles = StyleSheet.create({
     scrollContent: { paddingHorizontal: Spacing.md, paddingBottom: Spacing.xl + 20 },
 
     pageTitle: {
-        fontSize: 20, fontWeight: '700', color: Colors.TextPrimary,
+        fontSize: 20, fontFamily: 'Inter_700Bold', color: Colors.TextPrimary,
         paddingTop: Spacing.md, paddingBottom: Spacing.sm + 4,
         backgroundColor: Colors.Surface,
         marginBottom: Spacing.md
@@ -328,12 +327,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: Spacing.xs,
     },
-    statLabel: { fontSize: 12, color: Colors.TextSecondary, fontWeight: '500', flex: 1 },
-    statValue: { fontSize: 28, fontWeight: '700', color: Colors.TextPrimary, lineHeight: 34 },
+    statLabel: { fontSize: 12, color: Colors.TextSecondary, fontFamily: 'Inter_500Medium', flex: 1 },
+    statValue: { fontSize: 28, fontFamily: 'Inter_700Bold', color: Colors.TextPrimary, lineHeight: 34 },
     statSub: { fontSize: 11, color: Colors.TextSecondary, marginTop: 2, lineHeight: 15 },
 
     sectionTitle: {
-        fontSize: 15, fontWeight: '700', color: Colors.TextPrimary,
+        fontSize: 15, fontFamily: 'Inter_600SemiBold', color: Colors.TextPrimary,
         marginBottom: Spacing.sm + 2,
     },
     sectionCard: {
@@ -359,7 +358,7 @@ const styles = StyleSheet.create({
         marginRight: Spacing.md,
     },
     actionText: { flex: 1 },
-    actionLabel: { fontSize: 14, fontWeight: '600', color: Colors.TextPrimary },
+    actionLabel: { fontSize: 14, fontFamily: 'Inter_600SemiBold', color: Colors.TextPrimary },
     actionSub: { fontSize: 12, color: Colors.TextSecondary, marginTop: 2 },
 
     activityItem: {
@@ -370,7 +369,7 @@ const styles = StyleSheet.create({
         paddingVertical: Spacing.md,
     },
     activityLeft: { flex: 1, marginRight: Spacing.sm },
-    activityName: { fontSize: 13, fontWeight: '600', color: Colors.TextPrimary },
+    activityName: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.TextPrimary },
     activityAction: { fontSize: 12, color: Colors.TextSecondary, marginTop: 2 },
     activityTime: { fontSize: 11, color: Colors.TextSecondary, marginTop: 2 },
 
@@ -384,5 +383,5 @@ const styles = StyleSheet.create({
         ...CARD_SHADOW,
         elevation: 6,
     },
-    fabText: { color: Colors.TextWhite, fontSize: 18, fontWeight: '700', lineHeight: 22 },
+    fabText: { color: Colors.TextWhite, fontSize: 18, fontFamily: 'Inter_700Bold', lineHeight: 22 },
 });

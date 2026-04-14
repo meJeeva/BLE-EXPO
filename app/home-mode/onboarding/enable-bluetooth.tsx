@@ -5,7 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Colors, Typography, Spacing, BorderRadius } from "../../../src/constants/theme"; // adjust path
 import { useRouter } from "expo-router";
@@ -13,6 +13,7 @@ import { useRouter } from "expo-router";
 const EnableBluetooth = () => {
 
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -52,7 +53,7 @@ const EnableBluetooth = () => {
           </View>
         </View>
       </View>
-      <TouchableOpacity style={styles.button} onPress={() => router.navigate('/home-mode/onboarding/searching-device')}>
+      <TouchableOpacity style={[styles.button, { marginBottom: insets.bottom + 20 }]} onPress={() => router.navigate('/home-mode/onboarding/searching-device')}>
         <Text style={styles.buttonText}>Enable Bluetooth</Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -140,7 +141,7 @@ const styles = StyleSheet.create({
 
   button: {
     position: "absolute",
-    bottom: Spacing.lg,
+    bottom: 0,
     left: Spacing.md,
     right: Spacing.md,
     backgroundColor: Colors.Primary,

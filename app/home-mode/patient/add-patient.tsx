@@ -358,6 +358,7 @@ const styles = StyleSheet.create({
   primaryText: {
     ...Typography.Body,
     color: Colors.TextWhite,
+    fontSize: 14
   },
 
   secondaryBtn: {
@@ -371,6 +372,7 @@ const styles = StyleSheet.create({
   secondaryText: {
     ...Typography.Body,
     color: Colors.TextSecondary,
+    fontSize: 14
   },
   dropdownContainer: {
     marginBottom: Spacing.md,

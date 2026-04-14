@@ -3,10 +3,12 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { Colors, Typography, Spacing, BorderRadius } from '../../../src/constants/theme';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const ConnectedSuccessfully = () => {
 
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   return (
     <View style={styles.container}>
@@ -40,7 +42,7 @@ const ConnectedSuccessfully = () => {
           ✓ Connection established successfully. You can now proceed with device setup.
         </Text>
       </View>
-      <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={() => router.navigate('/home-mode/onboarding/warranty-registration')}>
+      <TouchableOpacity style={[styles.button, { marginBottom: insets.bottom + 20 }]} activeOpacity={0.8} onPress={() => router.navigate('/home-mode/onboarding/warranty-registration')}>
         <Text style={styles.buttonText}>Continue Setup</Text>
       </TouchableOpacity>
     </View>
@@ -147,7 +149,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: Spacing.xl,
     position: 'absolute',
-    bottom: 40,
+    bottom: 0,
     left: 20,
     right: 20
   },

@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     ...Typography.Body,
-    fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold',
   },
   primaryText: {
     color: Colors.Surface,

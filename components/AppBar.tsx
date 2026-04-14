@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     logoutText: {
         color: Colors.Error,
         fontSize: 14,
-        fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold',
     },
     divider: {
         height: 1,

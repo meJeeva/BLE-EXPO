@@ -118,7 +118,6 @@ const styles = StyleSheet.create({
     color: Colors.TextPrimary,
     marginBottom: Spacing.xs,
     ...Typography.H1,
-    fontWeight: '800'
   },
 
   subHeader: {
@@ -163,8 +162,9 @@ const styles = StyleSheet.create({
   },
 
   deviceTitle: {
-    ...Typography.Body,
     color: Colors.TextPrimary,
+    fontSize: 15,
+    fontFamily: 'Inter_600SemiBold'
   },
 
   deviceId: {
@@ -215,8 +215,8 @@ const styles = StyleSheet.create({
   },
 
   addTitle: {
-    ...Typography.Body,
     color: Colors.Primary,
+    fontFamily: 'Inter_600SemiBold'
   },
 
   addSubtitle: {

@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 import { useRouter } from 'expo-router';
-import { Colors, Typography, Spacing, BorderRadius } from './../../src/constants/theme';
+import { Colors, Typography, Spacing, BorderRadius } from '../../../src/constants/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AppBar from '@/components/AppBar';
 
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     logoutText: {
         color: Colors.Error,
         fontSize: 14,
-        fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold',
     },
     divider: {
         height: 1,

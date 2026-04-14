@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     ...Typography.BodySmall,
     color: Colors.TextPrimary,
     marginBottom: Spacing.xs,
-    fontWeight: '500',
+        fontFamily: 'Inter_600SemiBold',
   },
   pickerWrapper: {
     borderWidth: 1,

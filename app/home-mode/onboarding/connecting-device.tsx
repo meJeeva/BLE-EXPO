@@ -10,6 +10,7 @@ import {
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Colors, Typography, Spacing, BorderRadius } from "../../../src/constants/theme";
 import { useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const ConnectingDeviceScreen = () => {
   const progressAnim = useRef(new Animated.Value(0)).current;
@@ -18,7 +19,7 @@ const ConnectingDeviceScreen = () => {
   const [progress, setProgress] = useState(0);
 
   const router = useRouter();
-
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     Animated.timing(progressAnim, {
@@ -86,7 +87,7 @@ const ConnectingDeviceScreen = () => {
         </View>
         <Text style={styles.percent}>{progress}%</Text>
 
-        <TouchableOpacity style={styles.button} onPress={() => router.navigate('/home-mode/onboarding/connected-successfully')}>
+        <TouchableOpacity style={[styles.button, { marginBottom: insets.bottom + 20 }]} onPress={() => router.navigate('/home-mode/onboarding/connected-successfully')}>
           <Text style={styles.buttonText}>Connect to Device</Text>
         </TouchableOpacity>
 
@@ -179,7 +180,7 @@ const styles = StyleSheet.create({
 
   button: {
     position: "absolute",
-    bottom: Spacing.lg,
+    bottom: 0,
     left: Spacing.md,
     right: Spacing.md,
     backgroundColor: Colors.Primary,

@@ -480,7 +480,6 @@ const styles = StyleSheet.create({
   tagline: {
     ...Typography.BodySmall,
     color: Colors.TextSecondary,
-    fontWeight: '600'
   },
   subTagline: {
     ...Typography.Caption,
@@ -544,7 +543,6 @@ const styles = StyleSheet.create({
   primaryText: {
     ...Typography.Body,
     color: Colors.TextWhite,
-    fontWeight: '600',
   },
   secondaryButton: {
     flexDirection: 'row',
@@ -560,7 +558,6 @@ const styles = StyleSheet.create({
   secondaryText: {
     ...Typography.Body,
     color: Colors.primaryBackground,
-    fontWeight: '500',
   },
   signupText: {
     textAlign: 'center',
@@ -569,8 +566,7 @@ const styles = StyleSheet.create({
   },
   signupLink: {
     ...Typography.BodySmall,
-    color: Colors.primaryBackground,
-    fontWeight: '600',
+    color: Colors.Primary,
   },
   // Phone UI
   phoneContainer: {
@@ -604,7 +600,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     ...Typography.Body,
     color: Colors.TextPrimary,
-    fontWeight: '500'
   },
   warningContainer: {
     flexDirection: 'row',
@@ -619,7 +614,6 @@ const styles = StyleSheet.create({
   },
   label: {
     ...Typography.BodySmall,
-    fontWeight: '500',
     marginTop: 20,
     marginBottom: 5
   },

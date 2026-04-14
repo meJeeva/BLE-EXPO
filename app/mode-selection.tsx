@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '@/src/constants/theme';
+import { Colors, Typography } from '@/src/constants/theme';
 import { USAGE_TYPES, UsageType } from '@/src/constants/usageTypes';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '@/src/store/authStore';
@@ -31,7 +31,7 @@ export default function ModeSelection() {
       if (mode === 'HOME') {
         router.replace('/home-mode/login');
       } else {
-        router.push('/hospital-mode');
+        router.push('/hospital-mode/hospital-mode');
       }
     } catch (error) {
       console.error('Error saving mode:', error);
@@ -144,8 +144,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 20,
-    fontWeight: '700',
+    ...Typography.H1,
     color: Colors.TextPrimary,
     marginBottom: 6,
   },
@@ -189,9 +188,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cardTitle: {
-    fontSize: 15,
-    fontWeight: '600',
+    ...Typography.Body,
+    fontFamily: 'Inter_600SemiBold',
     color: Colors.TextPrimary,
+    fontSize: 14
   },
   cardSubtitle: {
     fontSize: 13,
@@ -209,7 +209,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: Colors.TextWhite,
-    fontWeight: '600',
-    fontSize: 16,
+    ...Typography.Body,
   },
 });

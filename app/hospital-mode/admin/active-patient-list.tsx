@@ -225,11 +225,11 @@ const styles = StyleSheet.create({
     logoText: {
         color: Colors.TextWhite,
         fontSize: 16,
-        fontWeight: '700',
+        fontFamily: 'Inter_600SemiBold',
     },
     appBarTitle: {
         fontSize: 16,
-        fontWeight: '700',
+        fontFamily: 'Inter_600SemiBold',
         color: Colors.TextPrimary,
         lineHeight: 20,
     },
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
     logoutText: {
         color: Colors.Error,
         fontSize: 14,
-        fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold',
     },
 
     divider: {
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
     },
     pageTitle: {
         fontSize: 22,
-        fontWeight: '700',
+        fontFamily:'Inter_700Bold',
         color: Colors.TextPrimary,
     },
 
@@ -313,12 +313,12 @@ const styles = StyleSheet.create({
     },
     tabText: {
         fontSize: 14,
-        fontWeight: '500',
+        fontFamily: 'Inter_600SemiBold',
         color: Colors.TextSecondary,
     },
     tabTextActive: {
         color: Colors.TextWhite,
-        fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold',
     },
 
     // Patient Card
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
     },
     patientName: {
         fontSize: 16,
-        fontWeight: '700',
+        fontFamily: 'Inter_700Bold',
         color: Colors.TextPrimary,
         lineHeight: 22,
     },
@@ -367,7 +367,7 @@ const styles = StyleSheet.create({
     },
     badgeText: {
         fontSize: 12,
-        fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold',
     },
     badgeTextActive: {
         color: Colors.TextWhite,
@@ -391,7 +391,7 @@ const styles = StyleSheet.create({
     },
     detailValue: {
         fontSize: 14,
-        fontWeight: '500',
+        fontFamily: 'Inter_600SemiBold',
         color: Colors.TextPrimary,
         lineHeight: 20,
     },

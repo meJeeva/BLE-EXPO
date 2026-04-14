@@ -555,6 +555,6 @@ const styles = StyleSheet.create({
     viewAllAlertsText: {
         ...Typography.BodySmall,
         color: Colors.Primary,
-        fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold',
     },
 })

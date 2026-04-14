@@ -374,7 +374,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
         marginBottom: 8,
         ...Typography.Caption,
-        fontWeight: '600',
+       fontFamily: 'Inter_600SemiBold',
         color: Colors.TextPrimary,
         marginVertical: 8,
         marginTop: 12
@@ -447,13 +447,13 @@ const styles = StyleSheet.create({
     filterText: {
         ...Typography.Caption,
         color: Colors.TextPrimary,
-        fontWeight: '500'
+       fontFamily: 'Inter_600SemiBold',
     },
 
     filterTextActive: {
         ...Typography.Caption,
         color: Colors.TextWhite,
-        fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold',
     },
 
     chartCard: {
@@ -470,7 +470,7 @@ const styles = StyleSheet.create({
 
     chartTitle: {
         ...Typography.Caption,
-        fontWeight: '600',
+              fontFamily: 'Inter_600SemiBold',
         marginBottom: 10,
         color: Colors.TextPrimary,
     },
@@ -504,13 +504,13 @@ const styles = StyleSheet.create({
     tempUnitActiveText: {
         ...Typography.Caption,
         color: Colors.Primary,
-        fontWeight: '600',
+              fontFamily: 'Inter_600SemiBold',
     },
 
     tempUnitInactiveText: {
         ...Typography.Caption,
         color: Colors.TextSecondary,
-        fontWeight: '600',
+              fontFamily: 'Inter_600SemiBold',
     },
     alertCard: {
         backgroundColor: '#F5EDE3',
@@ -547,7 +547,7 @@ const styles = StyleSheet.create({
 
     alertText: {
         ...Typography.Caption,
-        fontWeight: '600',
+              fontFamily: 'Inter_600SemiBold',
     },
 
     alertTime: {
@@ -582,7 +582,7 @@ const styles = StyleSheet.create({
     deviceLabel: {
         ...Typography.Caption,
         color: Colors.TextPrimary,
-        fontWeight: '600',
+              fontFamily: 'Inter_600SemiBold',
     },
 
     deviceValue: {

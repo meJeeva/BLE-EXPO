@@ -1,4 +1,4 @@
-import { BorderRadius, Colors, Spacing } from '@/src/constants/theme';
+import { BorderRadius, Colors, Spacing, Typography } from '@/src/constants/theme';
 import React, { useState } from 'react';
 import {
     View,
@@ -166,8 +166,7 @@ const styles = StyleSheet.create({
         marginLeft: 4,
     },
     headerTitle: {
-        fontSize: 16,
-        fontWeight: '600',
+        ...Typography.H1,
         color: Colors.TextPrimary,
         letterSpacing: 0.2,
     },
@@ -241,8 +240,7 @@ const styles = StyleSheet.create({
     },
     addButtonText: {
         color: Colors.TextWhite,
-        fontSize: 15,
-        fontWeight: '600',
+        ...Typography.Body,
         letterSpacing: 0.3,
     },
 
@@ -272,9 +270,9 @@ const styles = StyleSheet.create({
         gap: Spacing.sm,
     },
     cardName: {
-        fontSize: 15,
-        fontWeight: '600',
         color: Colors.TextPrimary,
+        fontSize: 15,
+        fontFamily: 'Inter_600SemiBold'
     },
     cardAge: {
         fontSize: 13,
@@ -332,7 +330,7 @@ const styles = StyleSheet.create({
     },
     badgeText: {
         fontSize: 11,
-        fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold',
     },
     badgeTextAlert: {
         color: Colors.Error,

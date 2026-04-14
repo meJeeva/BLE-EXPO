@@ -197,7 +197,8 @@ const styles = StyleSheet.create({
     gap: Spacing.sm,
   },
   contactName: {
-    ...Typography.BodySmall,
+    fontSize: 14,
+    fontFamily: 'Inter_600SemiBold',
     color: Colors.TextPrimary,
   },
   contactSub: {
@@ -234,7 +235,8 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.Border,
   },
   faqTitle: {
-    ...Typography.BodySmall,
+    fontFamily: 'Inter_600SemiBold',
+    fontSize: 15,
     color: Colors.TextPrimary,
   },
   faqItem: {

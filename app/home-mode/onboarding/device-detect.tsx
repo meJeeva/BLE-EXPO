@@ -8,13 +8,16 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import { Colors, Typography } from "@/src/constants/theme";
 import { useRouter } from "expo-router";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 const DeviceDetectedScreen = () => {
 
   const router = useRouter();
+  const insets = useSafeAreaInsets();
+
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
       <Text style={styles.title}>Device Detected</Text>
       <View style={styles.card}>
         <View style={styles.iconWrapper}>
@@ -33,10 +36,10 @@ const DeviceDetectedScreen = () => {
           start monitoring vitals.
         </Text>
       </View>
-      <TouchableOpacity style={styles.button} onPress={() => router.navigate('/home-mode/onboarding/enable-bluetooth')}>
+      <TouchableOpacity style={[styles.button, { marginBottom: insets.bottom + 20 }]} onPress={() => router.navigate('/home-mode/onboarding/enable-bluetooth')}>
         <Text style={styles.buttonText}>Register Device</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -124,7 +127,7 @@ const styles = StyleSheet.create({
 
   button: {
     position: "absolute",
-    bottom: 30,
+    bottom: 0,
     left: 16,
     right: 16,
     backgroundColor: Colors.Primary,

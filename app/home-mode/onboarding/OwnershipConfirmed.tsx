@@ -154,7 +154,6 @@ const styles = StyleSheet.create({
 
     cardTitle: {
         ...Typography.BodySmall,
-        fontWeight: '600',
         color: Colors.TextPrimary,
     },
 
@@ -181,7 +180,6 @@ const styles = StyleSheet.create({
 
     validDate: {
         ...Typography.Caption,
-        fontWeight: '600',
         color: Colors.TextPrimary,
     },
 

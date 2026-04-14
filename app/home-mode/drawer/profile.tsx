@@ -209,7 +209,8 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   infoValue: {
-    ...Typography.BodySmall,
+    fontSize: 14,
+    fontFamily: 'Inter_600SemiBold',
     color: Colors.TextPrimary,
   },
   sectionLabel: {
@@ -245,7 +246,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   menuText: {
-    ...Typography.BodySmall,
+    fontSize: 14,
+    fontFamily: 'Inter_600SemiBold',
     color: Colors.TextPrimary,
   },
   accountRow: {
@@ -270,5 +272,6 @@ const styles = StyleSheet.create({
   accountVal: {
     ...Typography.Caption,
     color: Colors.TextPrimary,
+    fontFamily: 'Inter_600SemiBold'
   },
 });

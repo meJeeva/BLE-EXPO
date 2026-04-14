@@ -9,7 +9,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { BorderRadius, Colors, Typography, Spacing } from '@/src/constants/theme';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const patients = [
     { id: '1', name: 'John Smith', age: 45 },
@@ -72,6 +72,7 @@ const DeviceItem = ({ item, isSelected, onSelect }: any) => (
 
 export default function StartMeasurement() {
     const router = useRouter();
+    const insets = useSafeAreaInsets();
     const [selectedPatient, setSelectedPatient] = React.useState<any>(null);
     const [selectedDevice, setSelectedDevice] = React.useState<any>(null);
 
@@ -143,6 +144,7 @@ export default function StartMeasurement() {
             <TouchableOpacity
                 style={[
                     styles.button,
+                    { marginBottom: insets.bottom + 20 },
                     // (!selectedPatient || !selectedDevice) && styles.disabledButton
                 ]}
                 onPress={handleStartMeasurement}

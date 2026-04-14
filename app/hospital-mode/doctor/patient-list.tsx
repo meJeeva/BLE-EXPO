@@ -169,7 +169,7 @@ const DoctorPatientList = () => {
                         <PatientCard
                             key={patient.id}
                             patient={patient}
-                            onPress={() => router.push(`/doctor/patient-details`)}
+                            onPress={() => router.push(`/hospital-mode/doctor/patient-details`)}
                         />
                     ))}
                 </View>

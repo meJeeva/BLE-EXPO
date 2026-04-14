@@ -98,7 +98,7 @@ const DoctorDashboard = () => {
                 <View style={styles.dashboardHeader}>
                     <Text style={styles.dashboardTitle}>Doctor Dashboard</Text>
                     <TouchableOpacity style={styles.profileBtn} onPress={() => {
-                        router.navigate('/doctor-profile')
+                        router.navigate('/hospital-mode/doctor/doctor-profile')
                     }}>
                         <Ionicons name="person" size={16} color={Colors.Primary} />
                     </TouchableOpacity>
@@ -143,7 +143,7 @@ const DoctorDashboard = () => {
                             title="My Patients"
                             subtitle={`${DOCTOR.assignedPatients} active patients`}
                             onPress={() => {
-                                router.navigate('/doctor/patient-list')
+                                router.navigate('/hospital-mode/doctor/patient-list')
                             }}
                         />
                         <View style={styles.actionDivider} />

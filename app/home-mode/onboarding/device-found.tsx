@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Animated,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Colors, Typography, Spacing, BorderRadius } from "../../../src/constants/theme";
 import { useRouter } from "expo-router";
@@ -15,6 +15,7 @@ const DeviceFound = () => {
   const scaleAnim = useRef(new Animated.Value(0)).current;
 
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     Animated.spring(scaleAnim, {
@@ -61,7 +62,7 @@ const DeviceFound = () => {
         </View>
 
       </View>
-      <TouchableOpacity style={styles.button} onPress={() => router.navigate('/home-mode/onboarding/connecting-device')}>
+      <TouchableOpacity style={[styles.button, { marginBottom: insets.bottom + 20 }]} onPress={() => router.navigate('/home-mode/onboarding/connecting-device')}>
         <Text style={styles.buttonText}>Connect to Device</Text>
       </TouchableOpacity>
 
@@ -183,7 +184,7 @@ const styles = StyleSheet.create({
 
   button: {
     position: "absolute",
-    bottom: Spacing.lg,
+    bottom: 0,
     left: Spacing.md,
     right: Spacing.md,
     backgroundColor: Colors.Primary,

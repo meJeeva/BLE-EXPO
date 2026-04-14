@@ -135,7 +135,9 @@ export default function OTP() {
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
 
-          <TouchableOpacity onPress={() => { }}>
+          <TouchableOpacity onPress={() => {
+            router.back();
+          }}>
             <Ionicons name="arrow-back" size={24} />
           </TouchableOpacity>
 
@@ -229,8 +231,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 22,
-    fontWeight: '700',
+    ...Typography.H1,
     color: Colors.TextPrimary,
     marginBottom: 8,
   },
@@ -241,8 +242,7 @@ const styles = StyleSheet.create({
   },
 
   phone: {
-    fontSize: 14,
-    fontWeight: '600',
+    ...Typography.Body,
     color: Colors.Primary,
     marginTop: 4,
   },
@@ -259,8 +259,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: '#F1F5F9',
     textAlign: 'center',
-    fontSize: 20,
-    fontWeight: '600',
+    ...Typography.H1,
     color: Colors.TextPrimary,
     borderWidth: 1,
     borderColor: Colors.Border
@@ -293,8 +292,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   appName: {
-    fontSize: 24,
-    fontWeight: '700',
+    ...Typography.H1,
     color: Colors.Primary,
     marginBottom: 4,
   },
@@ -308,6 +306,6 @@ const styles = StyleSheet.create({
   },
   resendTextActive: {
     color: Colors.Primary,
-    fontWeight: '600',
+    fontFamily: 'Inter_600SemiBold',
   },
 });

@@ -138,9 +138,9 @@ const HospitalDevices = () => {
                             onPress={
                                 () => {
                                     if (device.status === 'Connected') {
-                                        router.navigate('/hospital/device-details');
+                                        router.navigate('/hospital-mode/admin/connected-device-details');
                                     } else {
-                                        router.navigate('/hospital/active-device-details')
+                                        router.navigate('/hospital-mode/admin/active-device-details')
                                     }
                                 }
                             }
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     },
     pageTitle: {
         fontSize: 22,
-        fontWeight: '700',
+        fontFamily: 'Inter_700Bold',
         color: Colors.TextPrimary,
     },
     registerBtn: {

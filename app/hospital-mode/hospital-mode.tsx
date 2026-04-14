@@ -1,4 +1,4 @@
-import { BorderRadius, Colors, Spacing } from '@/src/constants/theme';
+import { BorderRadius, Colors, Spacing, Typography } from '@/src/constants/theme';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Image } from 'react-native';
@@ -8,13 +8,12 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   StatusBar,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
 } from 'react-native';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Role = 'Admin' | 'Doctor' | 'Nurse';
 
@@ -41,6 +40,7 @@ export default function HospitalMode() {
   const [rememberMe, setRememberMe] = useState(false);
 
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   const roles: Role[] = ['Admin', 'Doctor', 'Nurse'];
 
@@ -51,12 +51,11 @@ export default function HospitalMode() {
   };
 
   return (
-    <View style={styles.safe}>
+    <View style={[styles.safe, { paddingBottom: insets.bottom }]}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.Background} />
 
       <View style={styles.topRight}>
         <TouchableOpacity activeOpacity={0.7}>
-          <MoonIcon />
         </TouchableOpacity>
       </View>
 
@@ -71,7 +70,7 @@ export default function HospitalMode() {
         >
           <View style={styles.heroSection}>
             <Image
-              source={require('../assets/images/logo.png')}
+              source={require('../../assets/images/logo.png')}
               style={{
                 height: 80,
                 width: 80
@@ -141,12 +140,12 @@ export default function HospitalMode() {
 
             <TouchableOpacity style={styles.signInBtn} activeOpacity={0.85} onPress={() => {
               if (selectedRole === 'Admin')
-                router.navigate('/admin-dashboard')
+                router.navigate('/hospital-mode/admin/admin-dashboard')
               else if (selectedRole === 'Doctor') {
-                router.navigate('/doctor-dashboard')
+                router.navigate('/hospital-mode/doctor/doctor-dashboard')
               }
               else {
-                router.navigate('/nurse/nurse-dashboard')
+                router.navigate('/hospital-mode/nurse/nurse-dashboard')
               }
             }}>
               <Text style={styles.signInText}>
@@ -191,8 +190,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.lg,
   },
   appTitle: {
-    fontSize: 22,
-    fontWeight: '700',
+    ...Typography.H1,
     color: Colors.TextPrimary,
     marginTop: Spacing.md,
     letterSpacing: 0.2,
@@ -245,8 +243,8 @@ const styles = StyleSheet.create({
 
   // ── Label ──
   label: {
-    fontSize: 13,
-    fontWeight: '600',
+    ...Typography.Body,
+    fontFamily: 'Inter_600SemiBold',
     color: Colors.TextPrimary,
     marginBottom: Spacing.sm,
   },
@@ -276,13 +274,13 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   roleBtnText: {
-    fontSize: 13,
-    fontWeight: '500',
+    ...Typography.BodySmall,
+    fontFamily: 'Inter_600SemiBold',
     color: Colors.TextSecondary,
   },
   roleBtnTextActive: {
     color: Colors.TextWhite,
-    fontWeight: '600',
+    fontFamily: 'Inter_600SemiBold',
   },
 
   // ── Input ──
@@ -334,7 +332,7 @@ const styles = StyleSheet.create({
   checkmark: {
     color: Colors.TextWhite,
     fontSize: 10,
-    fontWeight: '700',
+    fontFamily: 'Inter_700Bold',
     lineHeight: 12,
   },
   rememberText: {
@@ -344,7 +342,7 @@ const styles = StyleSheet.create({
   forgotText: {
     fontSize: 13,
     color: Colors.Primary,
-    fontWeight: '500',
+    fontFamily: 'Inter_600SemiBold',
   },
 
   // ── Sign In Button ──
@@ -363,7 +361,7 @@ const styles = StyleSheet.create({
   signInText: {
     color: Colors.TextWhite,
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: 'Inter_600SemiBold',
     letterSpacing: 0.3,
   },
 

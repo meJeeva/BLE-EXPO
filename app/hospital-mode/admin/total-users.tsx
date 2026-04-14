@@ -103,7 +103,7 @@ export default function UsersScreen() {
                         </TouchableOpacity>
                         <Text style={styles.pageTitle}>Users</Text>
                     </View>
-                    <TouchableOpacity style={styles.createBtn} onPress={() => router.push('/hospital/create-user')}>
+                    <TouchableOpacity style={styles.createBtn} onPress={() => router.push('/hospital-mode/admin/create-user')}>
                         <Text style={styles.createBtnText}>+ Create</Text>
                     </TouchableOpacity>
                 </View>
@@ -117,7 +117,7 @@ export default function UsersScreen() {
                         <UserCard
                             key={user.id}
                             item={user}
-                            onPress={() => router.push('/hospital/user-details')}
+                            onPress={() => router.push('/hospital-mode/admin/total-user-details')}
                         />
                     ))}
                 </ScrollView>
@@ -159,11 +159,11 @@ const styles = StyleSheet.create({
     logoText: {
         color: Colors.TextWhite,
         fontSize: 16,
-        fontWeight: '700',
+        fontFamily: 'Inter_600SemiBold',
     },
     appBarTitle: {
         fontSize: 16,
-        fontWeight: '700',
+        fontFamily: 'Inter_600SemiBold',
         color: Colors.TextPrimary,
         lineHeight: 20,
     },
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     logoutText: {
         color: Colors.Error,
         fontSize: 14,
-        fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold',
     },
 
 

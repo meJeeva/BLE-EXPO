@@ -229,7 +229,6 @@ const styles = StyleSheet.create<{
   sectionTitle: {
     ...Typography.H2,
     color: Colors.TextPrimary,
-    marginBottom: Spacing.sm,
   },
 
   sectionIcon: {
@@ -238,6 +237,7 @@ const styles = StyleSheet.create<{
 
   sectionRight: {
     color: Colors.Primary,
+    fontFamily: 'Inter_600SemiBold'
   },
 
   card: {
@@ -251,13 +251,15 @@ const styles = StyleSheet.create<{
   },
 
   cardTitle: {
-    ...Typography.Body,
     color: Colors.TextPrimary,
+    fontSize: 14,
+    fontFamily: 'Inter_600SemiBold'
   },
 
   cardSubtitle: {
-    ...Typography.BodySmall,
     color: Colors.TextSecondary,
+    fontSize: 11,
+    fontFamily: 'Inter_400Regular'
   },
 
   statusBadge: {
@@ -290,5 +292,6 @@ const styles = StyleSheet.create<{
 
   buttonText: {
     color: Colors.TextWhite,
+    fontFamily: 'Inter_600SemiBold'
   },
 });

@@ -191,8 +191,9 @@ const styles = StyleSheet.create({
   },
 
   name: {
-    ...Typography.Body,
     color: Colors.TextPrimary,
+    fontSize: 15,
+    fontFamily: 'Inter_600SemiBold'
   },
 
   deviceId: {

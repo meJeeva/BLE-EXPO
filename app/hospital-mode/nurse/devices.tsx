@@ -66,7 +66,7 @@ const StatusBadge = ({ status }: { status: Device['status'] }) => {
 
 const DeviceCard = ({ device, router }: { device: Device, router: any }) => (
     <TouchableOpacity style={styles.deviceCard} activeOpacity={0.75} onPress={() => {
-        router.navigate('/nurse/device-info')
+        router.navigate('/hospital-mode/nurse/device-details')
     }}>
         {/* Card Header */}
         <View style={styles.cardHeader}>
@@ -125,7 +125,7 @@ const Devices = () => {
                 </View>
 
                 <TouchableOpacity style={styles.scanBtn} activeOpacity={0.85} onPress={() => {
-                    router.navigate('/nurse/scan-ble-devices')
+                    router.navigate('/hospital-mode/nurse/scan-ble-devices')
                 }}>
                     <MaterialCommunityIcons name="bluetooth" size={16} color={Colors.TextWhite} />
                     <Text style={styles.scanBtnText}>Scan</Text>
