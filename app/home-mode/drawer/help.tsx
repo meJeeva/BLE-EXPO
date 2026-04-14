@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { Colors, Typography, Spacing, BorderRadius } from '../../src/constants/theme';
+import { Colors, Typography, Spacing, BorderRadius } from '../../../src/constants/theme';
 
 const CONTACT_OPTIONS = [
   { id: '1', label: 'Call Support', sub: 'Available 24/7', icon: 'phone' },

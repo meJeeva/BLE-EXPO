@@ -18,7 +18,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#0E5CAD"
       },
       "package": "com.vitalz.mobile",
@@ -42,15 +42,9 @@
       "expo-sqlite",
       "expo-camera",
       [
-        "expo-barcode-scanner",
-        {
-          "cameraPermission": "Scan device QR codes for quick setup"
-        }
-      ],
-      [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#0E5CAD"
@@ -66,8 +60,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "0c509773-08f9-4a71-8f3b-8da07c976312"
+        "projectId": "99e6ed2b-2c25-48a0-86cf-e6e7a76f0583"
       }
-    }
+    },
+    "owner": "jeeva-mobdev"
   }
 }

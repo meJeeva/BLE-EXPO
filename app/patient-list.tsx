@@ -10,10 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-
-// ─── Design Tokens ───────────────────────────────────────────────────────────
-
-// ─── Types ────────────────────────────────────────────────────────────────────
+import AppBar from '@/components/AppBar';
 
 type FilterTab = 'All' | 'Active' | 'Discharged';
 type PatientStatus = 'Active' | 'Discharged';
@@ -83,11 +80,15 @@ const StatusBadge = ({ status }: { status: PatientStatus }) => {
     );
 };
 
-const PatientCard = ({ patient }: { patient: Patient }) => {
+const PatientCard = ({ patient, onPress }: { patient: Patient; onPress?: () => void }) => {
     const router = useRouter();
 
     const handleCardPress = () => {
-        router.push('/patient-details');
+        if (onPress) {
+            onPress();
+        } else {
+            router.push('/doctor/patient-details');
+        }
     };
 
     return (
@@ -118,7 +119,6 @@ const PatientCard = ({ patient }: { patient: Patient }) => {
     );
 };
 
-// ─── Main Screen ──────────────────────────────────────────────────────────────
 
 export default function PatientsScreen() {
     const router = useRouter();
@@ -139,40 +139,15 @@ export default function PatientsScreen() {
         <SafeAreaView style={styles.safeArea}>
             <StatusBar barStyle="dark-content" backgroundColor={Colors.Background} />
 
-            {/* ── Top App Bar ── */}
-            <View style={styles.appBar}>
-                <View style={styles.appBarLeft}>
-                    {/* Logo placeholder – replace with your <Image> */}
-                    <View style={styles.logoCircle}>
-                        <Text style={styles.logoText}>V</Text>
-                    </View>
-                    <View>
-                        <Text style={styles.appBarTitle}>VitalZ</Text>
-                        <Text style={styles.appBarSubtitle}>Admin Mode</Text>
-                    </View>
-                </View>
-
-                <View style={styles.appBarRight}>
-                    {/* Dark-mode toggle */}
-                    <TouchableOpacity style={styles.iconButton}>
-                        <Text style={styles.moonIcon}>🌙</Text>
-                    </TouchableOpacity>
-                    {/* Logout */}
-                    <TouchableOpacity style={styles.logoutButton}>
-                        <Text style={styles.logoutText}>Logout</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
+            <AppBar />
 
             <View style={styles.divider} />
 
-            {/* ── Screen Content ── */}
             <ScrollView
                 style={styles.container}
                 contentContainerStyle={styles.contentContainer}
                 showsVerticalScrollIndicator={false}
             >
-                {/* ── Page Header ── */}
                 <View style={styles.pageHeader}>
                     <TouchableOpacity style={styles.backButton} onPress={handleBack}>
                         <Text style={styles.backArrow}>←</Text>
@@ -180,31 +155,38 @@ export default function PatientsScreen() {
                     <Text style={styles.pageTitle}>Patients</Text>
                 </View>
 
-                {/* ── Filter Tabs ── */}
-                <View style={styles.tabRow}>
-                    {tabs.map((tab) => (
-                        <TouchableOpacity
-                            key={tab}
-                            style={[styles.tab, activeFilter === tab && styles.tabActive]}
-                            onPress={() => setActiveFilter(tab)}
-                            activeOpacity={0.8}
-                        >
-                            <Text
-                                style={[
-                                    styles.tabText,
-                                    activeFilter === tab && styles.tabTextActive,
-                                ]}
+                <View style={{
+                    padding: Spacing.md,
+                }}>
+                    <View style={styles.tabRow}>
+                        {tabs.map((tab) => (
+                            <TouchableOpacity
+                                key={tab}
+                                style={[styles.tab, activeFilter === tab && styles.tabActive]}
+                                onPress={() => setActiveFilter(tab)}
+                                activeOpacity={0.8}
                             >
-                                {tab}
-                            </Text>
-                        </TouchableOpacity>
+                                <Text
+                                    style={[
+                                        styles.tabText,
+                                        activeFilter === tab && styles.tabTextActive,
+                                    ]}
+                                >
+                                    {tab}
+                                </Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+
+                    {/* ── Patient Cards ── */}
+                    {filteredPatients.map((patient) => (
+                        <PatientCard
+                            key={patient.id}
+                            patient={patient}
+                            onPress={() => router.push(`/doctor/patient-details?id=${patient.id}`)}
+                        />
                     ))}
                 </View>
-
-                {/* ── Patient Cards ── */}
-                {filteredPatients.map((patient) => (
-                    <PatientCard key={patient.id} patient={patient} />
-                ))}
             </ScrollView>
         </SafeAreaView>
     );
@@ -289,16 +271,17 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     contentContainer: {
-        padding: Spacing.md,
-        paddingBottom: Spacing.xl,
+
     },
 
     // Page Header
     pageHeader: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: Spacing.md,
         gap: Spacing.sm,
+        backgroundColor: Colors.Surface,
+        padding: Spacing.md,
+        marginBottom: Spacing.xs,
     },
     backButton: {
         padding: Spacing.xs,

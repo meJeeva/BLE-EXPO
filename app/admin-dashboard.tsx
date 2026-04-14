@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import AppBar from '@/components/AppBar';
 
 
 const STATS = [
@@ -145,29 +146,7 @@ export default function AdminDashboard() {
         <SafeAreaView style={styles.safe}>
             <StatusBar barStyle="dark-content" backgroundColor={Colors.Background} />
 
-            <View style={styles.appBar}>
-                <View style={styles.appBarLeft}>
-                    {/* Logo placeholder – replace with your <Image> */}
-                    <View style={styles.logoCircle}>
-                        <Text style={styles.logoText}>V</Text>
-                    </View>
-                    <View>
-                        <Text style={styles.appBarTitle}>VitalZ</Text>
-                        <Text style={styles.appBarSubtitle}>Admin Mode</Text>
-                    </View>
-                </View>
-
-                <View style={styles.appBarRight}>
-                    {/* Dark-mode toggle */}
-                    <TouchableOpacity style={styles.iconButton}>
-                        <Text style={styles.moonIcon}>🌙</Text>
-                    </TouchableOpacity>
-                    {/* Logout */}
-                    <TouchableOpacity style={styles.logoutButton}>
-                        <Text style={styles.logoutText}>Logout</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
+            <AppBar />
 
             <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -181,7 +160,7 @@ export default function AdminDashboard() {
                             <StatCard
                                 key={s.id}
                                 {...s}
-                                onPress={s.id === '1' ? handlePatientClick : undefined}
+                                onPress={s.id === '1' ? handlePatientClick : s.id === '3' ? () => router.push('/hospital/hospital-devices') : s.id === '4' ? () => router.push('/users') : undefined}
                             />
                         ))}
                     </View>

@@ -5,6 +5,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  FlatList,
+  StatusBar,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,7 +15,6 @@ import { USAGE_TYPES, UsageType } from '@/src/constants/usageTypes';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '@/src/store/authStore';
 import { saveAppMode } from '@/src/utils/mode';
-import { FlatList } from 'react-native-gesture-handler';
 
 export default function ModeSelection() {
   const router = useRouter();
@@ -28,9 +29,9 @@ export default function ModeSelection() {
       setAppMode(mode);
 
       if (mode === 'HOME') {
-        router.replace('/login');
+        router.replace('/home-mode/login');
       } else {
-        router.push('/');
+        router.push('/hospital-mode');
       }
     } catch (error) {
       console.error('Error saving mode:', error);
@@ -92,6 +93,8 @@ export default function ModeSelection() {
 
   return (
     <SafeAreaView style={styles.container}>
+
+      <StatusBar barStyle={'dark-content'} />
       <View style={styles.content}>
         <Text style={styles.title}>Choose Usage Type</Text>
         <Text style={styles.subtitle}>How will you use VitalZ?</Text>
@@ -199,7 +202,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   button: {
-    backgroundColor: Colors.primaryBackground,
+    backgroundColor: Colors.Primary,
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',

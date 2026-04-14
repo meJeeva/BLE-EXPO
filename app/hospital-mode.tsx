@@ -140,7 +140,14 @@ export default function HospitalMode() {
             </View>
 
             <TouchableOpacity style={styles.signInBtn} activeOpacity={0.85} onPress={() => {
-              router.navigate('/admin-dashboard')
+              if (selectedRole === 'Admin')
+                router.navigate('/admin-dashboard')
+              else if (selectedRole === 'Doctor') {
+                router.navigate('/doctor-dashboard')
+              }
+              else {
+                router.navigate('/nurse/nurse-dashboard')
+              }
             }}>
               <Text style={styles.signInText}>
                 Sign In as {selectedRole}
